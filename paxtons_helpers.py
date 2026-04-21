@@ -27,11 +27,47 @@ class Tilemap:
     def draw(self, screen):
         for t in self.tiles: t.place(screen)
 
+class Weapon:
+    def __init__(self, name, damage, type, range):
+        self.name = name
+        self.damage = damage
+        self.type = type
+        self.range = range
+
+    def get_attack_squares(self, playerpos, screensize):
+        squares = []
+
+        if self.type == "warrior": # Warrior targets the adjacent squares 
+            for x in range(playerpos[0] - self.range, playerpos[0] + self.range):
+                for y in range(playerpos[1] - self.range, playerpos[1] + self.range):
+                    if (x, y) != playerpos: squares.append((x, y))
+        elif self.type == "marksman": # Marksman targets in a cross + pattern
+            for i in range(self.range * 3):
+                squares.append(playerpos[0], playerpos[1] + i)
+                squares.append(playerpos[0], playerpos[1] - i)
+                squares.append(playerpos[0] + i, playerpos[1])
+                squares.append(playerpos[0] - i, playerpos[1])
+        elif self.type == "assasin": # Assasin targets in a diagonal x pattern
+            for i in range(self.range * 3):
+                squares.append(playerpos[0] + i, playerpos[1] + i)
+                squares.append(playerpos[0] - i, playerpos[1] - i)
+                squares.append(playerpos[0] + i, playerpos[1] - i)
+                squares.append(playerpos[0] - i, playerpos[1] + i)
+        elif self.type == "blitzer": # Blitzer targets many random squares
+            for i in range(self.range * 15):
+                newSquare = playerpos
+                while (newSquare in squares) or newSquare != playerpos:
+                    newSquare = (randint(0, screensize[0]), randint(0, screensize[1]))
+
+                squares.append(newSquare)
+
 class Player:
     def __init__(self):
         self.location = (5, 5)
         self.sprite = py.image.load("sprites//MCfront//Idle.png").convert_alpha()
         self.rect = self.sprite.get_rect()
+        self.health = 100
+
 
     def place(self, screen):
         self.rect.topleft = ((self.location[0]) * 128, (self.location[1]) * 128)
@@ -80,4 +116,3 @@ while running:
     player.place(screen)
 
     py.display.flip()
-
