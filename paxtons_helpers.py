@@ -1,7 +1,7 @@
 import pygame as py
 from random import randint, choice
 import math
-
+from Jacob.spheudocode import Monster
 class Tile:
     def __init__(self, location, spritePath):
         self.location = location
@@ -132,7 +132,7 @@ clock = py.time.Clock()
 
 tilemap = Tilemap(size, "dirt")
 player = Player()
-      
+monster = Monster("sprites/flame hop/flame hopper v1-1.png.png")
 running = True
 attackSquares = None
 moveSquares = None
@@ -164,6 +164,7 @@ while running:
 
     tilemap.draw(screen)
     player.place(screen)
+    monster.place(screen)
 
     if currentTurn == "playerAttack":
         if attackSquares == None : attackSquares = player.attack(size)
