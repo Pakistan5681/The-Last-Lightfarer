@@ -13,7 +13,7 @@ class Weapon:
 
     def get_attack_squares(self, enemeypos, screensize):
         squares = []
-
+        psquares=[]
         if self.type == "pawn": # Warrior targets the adjacent squares 
             for x in range(enemeypos[0] - self.range, enemeypos[0] + self.range):
                 for y in range(enemeypos[1] - self.range, enemeypos[1] + self.range):
@@ -26,10 +26,13 @@ class Weapon:
                 squares.append((enemeypos[0] - i, enemeypos[1]))
         elif self.type == "bishop": # Assasin targets in a diagonal x pattern
             for i in range(self.range * 3):
-                squares.append((enemeypos[0] + i, enemeypos[1] + i))
-                squares.append((enemeypos[0] - i, enemeypos[1] - i))
-                squares.append((enemeypos[0] + i, enemeypos[1] - i))
-                squares.append((enemeypos[0] - i, enemeypos[1] + i))
+                psquares.append((enemeypos[0] + i, enemeypos[1] + i))
+                psquares.append((enemeypos[0] - i, enemeypos[1] - i))
+                psquares.append((enemeypos[0] + i, enemeypos[1] - i))
+                psquares.append((enemeypos[0] - i, enemeypos[1] + i))
+            for x in range(enemeypos[0] - self.range, enemeypos[0] + self.range):
+                for y in range(enemeypos[1] - self.range, enemeypos[1] + self.range):
+                    if (x, y) != enemeypos: squares.append((x, y))      
         elif self.type == "Knight": # Blitzer targets many random squares
             for i in range(self.range * 15):
                 squares.append((enemeypos[0] + i, enemeypos[1] + 1))
@@ -41,8 +44,10 @@ class Weapon:
                 squares.append((enemeypos[0] -1, enemeypos[1] - i))
                 squares.append((enemeypos[0] +1, enemeypos[1] - i))
     def attacking(squares,playerpos):
-        for i in squares[0][0]
-        playerpos 
+        if self.type == "bishop":
+
+        for ex, ey in squares:
+            playerpos 
         
 
 class Monster:
