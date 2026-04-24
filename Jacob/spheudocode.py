@@ -50,19 +50,15 @@ class Weapon:
     def attacking(self,squares,playerpos):
         if self.type == "bishop":
             print()
-
-
-        for ex, ey in squares:
-            target = playerpos
-            closest_point = None
-            min_dist = float('inf') # Start with infinity
-
-            for p in squares:
-                dist = math.sqrt((p[0] - target[0])**2 + (p[1] - target[1])**2)
-
-                if dist < min_dist:
-                    min_dist = dist
-                    closest_point = p
+        target = playerpos
+        closest_point = None
+        min_dist = float('inf') # Start with infinity
+        for p in squares:
+            dist = math.sqrt((p[0] - target[0])**2 + (p[1] - target[1])**2)
+            if dist < min_dist:
+                min_dist = dist
+                closest_point = p
+        self.location = closest_point
 
 
 
