@@ -66,9 +66,9 @@ class Weapon:
         
 
 class Monster:
-    def __init__(self,sprite):
-        self.location = (7, 5)
-        self.sprite = py.image.load(sprite).convert_alpha()
+    def __init__(self, spriteImage, location):
+        self.location = location
+        self.sprite = py.image.load(spriteImage).convert_alpha()
         self.rect = self.sprite.get_rect()
         self.health = 100
 

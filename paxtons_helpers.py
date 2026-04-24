@@ -96,11 +96,11 @@ class Player:
 
         return out
     
-    def move(self):
+    def move(self, monsters):
         squares = []
         for x in range(self.location[0] - self.speed, self.location[0] + self.speed + 1):
             for y in range(self.location[1] - self.speed, self.location[1] + self.speed + 1):
-                if (x, y) != self.location and x >= 0 and y >= 0: squares.append(DisplaySprite("sprites//Indicators//move_indicator.png", (x, y)))
+                if (x, y) != self.location and x >= 0 and y >= 0 and (not (x, y) in monsters): squares.append(DisplaySprite("sprites//Indicators//move_indicator.png", (x, y)))
 
         return squares
 
@@ -132,7 +132,8 @@ clock = py.time.Clock()
 
 tilemap = Tilemap(size, "dirt")
 player = Player()
-monster = Monster("sprites/flame hop/flame hopper v1-1.png.png")
+
+monsters = [Monster("sprites/flame hop/flame hopper v1-1.png.png", (1, 2)), Monster("sprites/flame hop/flame hopper v1-1.png.png", (3, 8)), Monster("sprites/flame hop/flame hopper v1-1.png.png", (6, 3))]
 running = True
 attackSquares = None
 moveSquares = None
@@ -164,13 +165,17 @@ while running:
 
     tilemap.draw(screen)
     player.place(screen)
-    monster.place(screen)
+    monsterPos = []
+
+    for i in monsters: 
+        i.place(screen)
+        monsterPos.append(i.location)
 
     if currentTurn == "playerAttack":
         if attackSquares == None : attackSquares = player.attack(size)
         for i in attackSquares: i.place(screen)
     elif currentTurn == "playerMove":
-        if moveSquares == None: moveSquares = player.move()
+        if moveSquares == None: moveSquares = player.move(monsterPos)
         for i in moveSquares: i.place(screen)
 
 
