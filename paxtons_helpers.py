@@ -1,7 +1,9 @@
 import pygame as py
 from random import randint, choice
 import math
-from Jacob.spheudocode import Monster
+import Jacob.spheudocode as js
+from time import sleep
+
 class Tile:
     def __init__(self, location, spritePath):
         self.location = location
@@ -47,7 +49,7 @@ class Weapon:
                 if playerpos[1] - i >= 0 and (playerpos[0], playerpos[1] - i) != playerpos: squares.append((playerpos[0], playerpos[1] - i))
                 if playerpos[0] + i >= 0 and (playerpos[0] + i, playerpos[1]) != playerpos: squares.append((playerpos[0] + i, playerpos[1]))
                 if playerpos[0] - i >= 0 and (playerpos[0] - i, playerpos[1]) != playerpos: squares.append((playerpos[0] - i, playerpos[1]))
-        elif self.type == "assasin": # Assasin targets in a diagonal x pattern
+        elif self.type == "assassin": # assassin targets in a diagonal x pattern
             for i in range((self.range * 2) + 1):
                 if playerpos[0] + i >= 0 and playerpos[1] + i >= 0 and (playerpos[0] + i, playerpos[1] + i) != playerpos: squares.append((playerpos[0] + i, playerpos[1] + i))
                 if playerpos[0] - i >= 0 and playerpos[1] - i >= 0 and (playerpos[0] - i, playerpos[1] - i) != playerpos: squares.append((playerpos[0] - i, playerpos[1] - i))
@@ -133,7 +135,7 @@ clock = py.time.Clock()
 tilemap = Tilemap(size, "dirt")
 player = Player()
 
-monsters = [Monster("sprites/flame hop/flame hopper v1-1.png.png", (1, 2)), Monster("sprites/flame hop/flame hopper v1-1.png.png", (3, 8)), Monster("sprites/flame hop/flame hopper v1-1.png.png", (6, 3))]
+monsters = [js.Monster("sprites/flame hop/flame hopper v1-1.png.png", (1, 2), js.Weapon("Generic Ah Weapon", 5, "rook", 2)), js.Monster("sprites/flame hop/flame hopper v1-1.png.png", (3, 8), js.Weapon("Generic Ah Weapon", 5, "rook", 2)), js.Monster("sprites/flame hop/flame hopper v1-1.png.png", (6, 3), js.Weapon("Generic Ah Weapon", 5, "rook", 2))]
 running = True
 attackSquares = None
 moveSquares = None
@@ -158,6 +160,11 @@ while running:
     elif currentTurn == "playerMove":
         if moveSquares == None: moveSquares = player.move(monsterPos)
         for i in moveSquares: i.place(screen)
+    else: 
+        for i in monsters:
+            i.move(player.location, size)
+            currentTurn = "playerMove"
+
 
     for event in py.event.get():
         if event.type == py.QUIT:
@@ -170,7 +177,7 @@ while running:
 
                     if get_tile_mouse_pos() in locations:
                         attackSquares = None
-                        currentTurn = "playerMove"
+                        currentTurn = "monsterMove"
                 elif currentTurn == "playerMove":
                     locations = []
                     for i in moveSquares: locations.append(i.location)
