@@ -58,11 +58,7 @@ class Weapon:
             if dist < min_dist:
                 min_dist = dist
                 closest_point = p
-        self.location = closest_point
-
-
-
-            
+        self.location = closest_point            
         
 
 class Monster:

@@ -143,6 +143,15 @@ currentTurn = "playerAttack" # A variable that decides what actions can take pla
 while running:
     screen.fill((0, 0, 255))
 
+    tilemap.draw(screen)
+    player.place(screen)
+
+    monsterPos = []
+
+    for i in monsters: 
+        i.place(screen)
+        monsterPos.append(i.location)
+
     if currentTurn == "playerAttack":
         if attackSquares == None : attackSquares = player.attack(size)
         for i in attackSquares: i.place(screen)
@@ -169,14 +178,5 @@ while running:
                     moveSquares = None
                     player.location = get_tile_mouse_pos()
                     currentTurn = "playerAttack"
-
-    tilemap.draw(screen)
-    player.place(screen)
-    monsterPos = []
-
-    for i in monsters: 
-        i.place(screen)
-        monsterPos.append(i.location)
-
 
     py.display.flip()
