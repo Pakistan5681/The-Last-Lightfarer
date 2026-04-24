@@ -135,7 +135,7 @@ clock = py.time.Clock()
 tilemap = Tilemap(size, "dirt")
 player = Player()
 
-monsters = [js.Monster("sprites/flame hop/flame hopper v1-1.png.png", (1, 2), js.Weapon("Generic Ah Weapon", 5, "rook", 2)), js.Monster("sprites/flame hop/flame hopper v1-1.png.png", (3, 8), js.Weapon("Generic Ah Weapon", 5, "rook", 2)), js.Monster("sprites/flame hop/flame hopper v1-1.png.png", (6, 3), js.Weapon("Generic Ah Weapon", 5, "rook", 2))]
+monsters = [js.Monster("sprites/flame hop/flame hopper v1-1.png.png", (1, 2), js.Weapon("Generic Ah Weapon", 5, "pawn", 1)), js.Monster("sprites/flame hop/flame hopper v1-1.png.png", (3, 8), js.Weapon("Generic Ah Weapon", 5, "pawn", 2)), js.Monster("sprites/flame hop/flame hopper v1-1.png.png", (6, 3), js.Weapon("Generic Ah Weapon", 5, "pawn", 3))]
 running = True
 attackSquares = None
 moveSquares = None
