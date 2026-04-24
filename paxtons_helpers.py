@@ -143,6 +143,13 @@ currentTurn = "playerAttack" # A variable that decides what actions can take pla
 while running:
     screen.fill((0, 0, 255))
 
+    if currentTurn == "playerAttack":
+        if attackSquares == None : attackSquares = player.attack(size)
+        for i in attackSquares: i.place(screen)
+    elif currentTurn == "playerMove":
+        if moveSquares == None: moveSquares = player.move(monsterPos)
+        for i in moveSquares: i.place(screen)
+
     for event in py.event.get():
         if event.type == py.QUIT:
             running = False
@@ -170,13 +177,6 @@ while running:
     for i in monsters: 
         i.place(screen)
         monsterPos.append(i.location)
-
-    if currentTurn == "playerAttack":
-        if attackSquares == None : attackSquares = player.attack(size)
-        for i in attackSquares: i.place(screen)
-    elif currentTurn == "playerMove":
-        if moveSquares == None: moveSquares = player.move(monsterPos)
-        for i in moveSquares: i.place(screen)
 
 
     py.display.flip()
