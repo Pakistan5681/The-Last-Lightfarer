@@ -163,20 +163,21 @@ while running:
         if event.type == py.QUIT:
             running = False
         elif event.type == py.MOUSEBUTTONDOWN:
-            if currentTurn == "playerAttack":
-                locations = []
-                for i in attackSquares: locations.append(i.location)
+            if event.button == 1:
+                if currentTurn == "playerAttack":
+                    locations = []
+                    for i in attackSquares: locations.append(i.location)
 
-                if get_tile_mouse_pos() in locations:
-                    attackSquares = None
-                    currentTurn = "playerMove"
-            elif currentTurn == "playerMove":
-                locations = []
-                for i in moveSquares: locations.append(i.location)
+                    if get_tile_mouse_pos() in locations:
+                        attackSquares = None
+                        currentTurn = "playerMove"
+                elif currentTurn == "playerMove":
+                    locations = []
+                    for i in moveSquares: locations.append(i.location)
 
-                if get_tile_mouse_pos() in locations:
-                    moveSquares = None
-                    player.location = get_tile_mouse_pos()
-                    currentTurn = "playerAttack"
+                    if get_tile_mouse_pos() in locations:
+                        moveSquares = None
+                        player.location = get_tile_mouse_pos()
+                        currentTurn = "playerAttack"
 
     py.display.flip()
