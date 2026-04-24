@@ -38,28 +38,41 @@ class Weapon:
         squares = []
 
         if self.type == "warrior": # Warrior targets the adjacent squares 
-            for x in range(playerpos[0] - self.range, playerpos[0] + self.range):
-                for y in range(playerpos[1] - self.range, playerpos[1] + self.range):
-                    if (x, y) != playerpos: squares.append((x, y))
+            for x in range(playerpos[0] - self.range, playerpos[0] + self.range + 1):
+                for y in range(playerpos[1] - self.range, playerpos[1] + self.range + 1):
+                    if (x, y) != playerpos and x >= 0 and y >= 0: squares.append((x, y))
         elif self.type == "marksman": # Marksman targets in a cross + pattern
-            for i in range(self.range * 3):
-                squares.append(playerpos[0], playerpos[1] + i)
-                squares.append(playerpos[0], playerpos[1] - i)
-                squares.append(playerpos[0] + i, playerpos[1])
-                squares.append(playerpos[0] - i, playerpos[1])
+            for i in range((self.range * 2) + 1):
+                if playerpos[1] + i >= 0 and (playerpos[0], playerpos[1] + i) != playerpos: squares.append((playerpos[0], playerpos[1] + i))
+                if playerpos[1] - i >= 0 and (playerpos[0], playerpos[1] - i) != playerpos: squares.append((playerpos[0], playerpos[1] - i))
+                if playerpos[0] + i >= 0 and (playerpos[0] + i, playerpos[1]) != playerpos: squares.append((playerpos[0] + i, playerpos[1]))
+                if playerpos[0] - i >= 0 and (playerpos[0] - i, playerpos[1]) != playerpos: squares.append((playerpos[0] - i, playerpos[1]))
         elif self.type == "assasin": # Assasin targets in a diagonal x pattern
-            for i in range(self.range * 3):
-                squares.append(playerpos[0] + i, playerpos[1] + i)
-                squares.append(playerpos[0] - i, playerpos[1] - i)
-                squares.append(playerpos[0] + i, playerpos[1] - i)
-                squares.append(playerpos[0] - i, playerpos[1] + i)
+            for i in range((self.range * 2) + 1):
+                if playerpos[0] + i >= 0 and playerpos[1] + i >= 0 and (playerpos[0] + i, playerpos[1] + i) != playerpos: squares.append((playerpos[0] + i, playerpos[1] + i))
+                if playerpos[0] - i >= 0 and playerpos[1] - i >= 0 and (playerpos[0] - i, playerpos[1] - i) != playerpos: squares.append((playerpos[0] - i, playerpos[1] - i))
+                if playerpos[0] + i >= 0 and playerpos[1] - i >= 0 and (playerpos[0] + i, playerpos[1] - i) != playerpos: squares.append((playerpos[0] + i, playerpos[1] - i))
+                if playerpos[0] - i >= 0 and playerpos[1] + i >= 0 and (playerpos[0] - i, playerpos[1] + i) != playerpos: squares.append((playerpos[0] - i, playerpos[1] + i))
         elif self.type == "blitzer": # Blitzer targets many random squares
             for i in range(self.range * 15):
                 newSquare = playerpos
-                while (newSquare in squares) or newSquare != playerpos:
+                while (newSquare in squares) or newSquare == playerpos:
                     newSquare = (randint(0, screensize[0]), randint(0, screensize[1]))
 
                 squares.append(newSquare)
+
+        return squares
+    
+class DisplaySprite:
+    def __init__(self, spritepath, location):
+        self.location = location
+        self.sprite = py.image.load(spritepath).convert_alpha()
+        self.rect = self.sprite.get_rect()
+    
+    def place(self, screen):
+        self.rect.topleft = ((self.location[0]) * 128, (self.location[1]) * 128)
+        outSprite = py.transform.scale(self.sprite, (128, 128))
+        screen.blit(outSprite, self.rect.topleft)
 
 class Player:
     def __init__(self):
@@ -67,12 +80,30 @@ class Player:
         self.sprite = py.image.load("sprites//MCfront//Idle.png").convert_alpha()
         self.rect = self.sprite.get_rect()
         self.health = 100
-
+        self.weapon = Weapon("Lantern", 5, "warrior", 3)
+        self.speed = 5
 
     def place(self, screen):
         self.rect.topleft = ((self.location[0]) * 128, (self.location[1]) * 128)
         outSprite = py.transform.scale(self.sprite, (128, 128))
         screen.blit(outSprite, self.rect.topleft)
+
+    def attack(self, tilemapSize):
+        attackTiles = self.weapon.get_attack_squares(self.location, tilemapSize)
+        out = []
+        for i in attackTiles:
+            out.append(DisplaySprite("sprites//Indicators//attack_indicator.png", i))
+
+        return out
+    
+    def move(self):
+        squares = []
+        for x in range(self.location[0] - self.speed, self.location[0] + self.speed + 1):
+            for y in range(self.location[1] - self.speed, self.location[1] + self.speed + 1):
+                if (x, y) != self.location and x >= 0 and y >= 0: squares.append(DisplaySprite("sprites//Indicators//move_indicator.png", (x, y)))
+
+        return squares
+
 
 def get_random_tile(category):  
     """
@@ -94,7 +125,7 @@ def get_tile_mouse_pos():
 
 py.init()
 
-size = (16, 9)
+size = (11, 11)
 
 screen = py.display.set_mode((size[0] * 128, size[1] * 128))
 clock = py.time.Clock()
@@ -103,6 +134,11 @@ tilemap = Tilemap(size, "dirt")
 player = Player()
 monster = Monster("sprites/flame hop/flame hopper v1-1.png.png")
 running = True
+attackSquares = None
+moveSquares = None
+
+currentTurn = "playerAttack" # A variable that decides what actions can take place (i.e. playerAttack means it is the players attack phase)
+
 while running:
     screen.fill((0, 0, 255))
 
@@ -110,10 +146,32 @@ while running:
         if event.type == py.QUIT:
             running = False
         elif event.type == py.MOUSEBUTTONDOWN:
-            player.location = get_tile_mouse_pos()
+            if currentTurn == "playerAttack":
+                locations = []
+                for i in attackSquares: locations.append(i.location)
+
+                if get_tile_mouse_pos() in locations:
+                    attackSquares = None
+                    currentTurn = "playerMove"
+            elif currentTurn == "playerMove":
+                locations = []
+                for i in moveSquares: locations.append(i.location)
+
+                if get_tile_mouse_pos() in locations:
+                    moveSquares = None
+                    player.location = get_tile_mouse_pos()
+                    currentTurn = "playerAttack"
 
     tilemap.draw(screen)
     player.place(screen)
     monster.place(screen)
+
+    if currentTurn == "playerAttack":
+        if attackSquares == None : attackSquares = player.attack(size)
+        for i in attackSquares: i.place(screen)
+    elif currentTurn == "playerMove":
+        if moveSquares == None: moveSquares = player.move()
+        for i in moveSquares: i.place(screen)
+
 
     py.display.flip()
