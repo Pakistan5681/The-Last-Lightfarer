@@ -126,6 +126,13 @@ size = (10, 10)
 screen = py.display.set_mode((size[0] * 128, size[1] * 128))
 clock = py.time.Clock()
 
+tiles = []
+
+# This is temporary while I make a tilemap editor
+for x in range(10):
+    for y in range(10):
+        tiles.append(Tile((x, y), "sprites//Tiles//dirt//dirt_ground_1.png")) 
+
 tilemap = Tilemap(size, "dirt")
 player = Player()
 
