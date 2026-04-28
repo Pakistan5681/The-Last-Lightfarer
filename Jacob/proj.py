@@ -2,7 +2,7 @@ import pygame as py
 import math
 class Projectile:
     def __init__(self, spritePath, startpos, targetpos, speed, damage):
-        self.sprite = py.transform.rotate(py.image.load(spritePath).convert_alpha(), 45)
+        self.sprite = py.transform.scale(py.image.load(spritePath).convert_alpha(),(400,400))
         self.x = float(startpos[0] * 128)
         self.y = float(startpos[1] * 128)
         self.targetx = float(targetpos[0] * 128)

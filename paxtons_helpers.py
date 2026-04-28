@@ -1,9 +1,9 @@
 import pygame as py
 from random import randint, choice
 import math
-import Jacob.spheudocode as js
+from Jacob.spheudocode import Monster, MWeapon
 from time import sleep
-
+from Jacob.proj import Projectile
 class Tile:
     def __init__(self, location, spritePath):
         self.location = location
@@ -135,10 +135,11 @@ clock = py.time.Clock()
 tilemap = Tilemap(size, "dirt")
 player = Player()
 
-monsters = [js.Monster("sprites/flame hop/flame hopper v1-1.png.png", (1, 2), js.Weapon("Generic Ah Weapon", 5, "rook", 2)), js.Monster("sprites/flame hop/flame hopper v1-1.png.png", (3, 8), js.Weapon("Generic Ah Weapon", 5, "rook", 2)), js.Monster("sprites/flame hop/flame hopper v1-1.png.png", (6, 3), js.Weapon("Generic Ah Weapon", 5, "rook", 2))]
+monsters = [Monster("sprites/flame hop/flame hopper v1-1.png.png", (3, 3), MWeapon("Generic Ah Weapon", 5, "bishop", 2),5)]
 running = True
 attackSquares = None
 moveSquares = None
+active_projectiles = []  # fix-ed list to hold live projectiles so they can be drawn 
 
 currentTurn = "playerAttack" # A variable that decides what actions can take place (i.e. playerAttack means it is the players attack phase)
 
@@ -160,11 +161,20 @@ while running:
     elif currentTurn == "playerMove":
         if moveSquares == None: moveSquares = player.move(monsterPos)
         for i in moveSquares: i.place(screen)
-    else: 
+    else:
+        # fix-ed pass monsterPos as occupied so monsters don't stack on each other or the player
+        occupied = monsterPos + [player.location]
         for i in monsters:
-            i.move(player.location, size)
-            currentTurn = "playerMove"
+            result = i.move(player.location, size, occupied)  # fix-ed capture return value
+            if isinstance(result, Projectile):                 # fix-ed store projectile if one was returned
+                active_projectiles.append(result)
+        currentTurn = "playerMove"
 
+    # fix-ed draw and update all live projectiles every frame
+    for proj in active_projectiles[:]:
+        proj.draw(screen, player)
+        if not proj.alive:
+            active_projectiles.remove(proj)
 
     for event in py.event.get():
         if event.type == py.QUIT:
