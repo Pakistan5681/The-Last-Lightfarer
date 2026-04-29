@@ -9,6 +9,7 @@ class Tile:
         self.location = location
         self.sprite = py.image.load(spritePath).convert_alpha()
         self.rect = self.sprite.get_rect()
+        self.spritePath = spritePath
 
     def place(self, screen):
         self.rect.topleft = ((self.location[0]) * 128, (self.location[1]) * 128)
@@ -118,84 +119,3 @@ def get_tile_mouse_pos():
     mouseX = math.floor(mousepos[0] / 128)
     mouseY = math.floor(mousepos[1] / 128)
     return (mouseX, mouseY)
-
-py.init()
-
-size = (10, 10)
-
-screen = py.display.set_mode((size[0] * 128, size[1] * 128))
-clock = py.time.Clock()
-
-tiles = []
-
-# This is temporary while I make a tilemap editor
-for x in range(10):
-    for y in range(10):
-        tiles.append(Tile((x, y), "sprites//Tiles//dirt//dirt_ground_1.png")) 
-
-tilemap = Tilemap(size, "dirt")
-player = Player()
-
-monsters = [Monster("sprites/flame hop/flame hopper v1-1.png.png", (3, 3), MWeapon("Generic Ah Weapon", 5, "bishop", 2),5)]
-running = True
-attackSquares = None
-moveSquares = None
-active_projectiles = []  # fix-ed list to hold live projectiles so they can be drawn 
-
-currentTurn = "playerAttack" # A variable that decides what actions can take place (i.e. playerAttack means it is the players attack phase)
-
-while running:
-    screen.fill((0, 0, 255))
-
-    tilemap.draw(screen)
-    player.place(screen)
-
-    monsterPos = []
-
-    for i in monsters: 
-        i.place(screen)
-        monsterPos.append(i.location)
-
-    if currentTurn == "playerAttack":
-        if attackSquares == None : attackSquares = player.attack(size)
-        for i in attackSquares: i.place(screen)
-    elif currentTurn == "playerMove":
-        if moveSquares == None: moveSquares = player.move(monsterPos)
-        for i in moveSquares: i.place(screen)
-    else:
-        # fix-ed pass monsterPos as occupied so monsters don't stack on each other or the player
-        occupied = monsterPos + [player.location]
-        for i in monsters:
-            result = i.move(player.location, size, occupied)  # fix-ed capture return value
-            if isinstance(result, Projectile):                 # fix-ed store projectile if one was returned
-                active_projectiles.append(result)
-        currentTurn = "playerMove"
-
-    # fix-ed draw and update all live projectiles every frame
-    for proj in active_projectiles[:]:
-        proj.draw(screen, player)
-        if not proj.alive:
-            active_projectiles.remove(proj)
-
-    for event in py.event.get():
-        if event.type == py.QUIT:
-            running = False
-        elif event.type == py.MOUSEBUTTONDOWN:
-            if event.button == 1:
-                if currentTurn == "playerAttack":
-                    locations = []
-                    for i in attackSquares: locations.append(i.location)
-
-                    if get_tile_mouse_pos() in locations:
-                        attackSquares = None
-                        currentTurn = "monsterMove"
-                elif currentTurn == "playerMove":
-                    locations = []
-                    for i in moveSquares: locations.append(i.location)
-
-                    if get_tile_mouse_pos() in locations:
-                        moveSquares = None
-                        player.location = get_tile_mouse_pos()
-                        currentTurn = "playerAttack"
-
-    py.display.flip()
