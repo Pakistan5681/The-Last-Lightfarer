@@ -5,11 +5,12 @@ from Jacob.spheudocode import Monster, MWeapon
 from time import sleep
 from Jacob.proj import Projectile
 class Tile:
-    def __init__(self, location, spritePath):
+    def __init__(self, location, spritePath, isWall):
         self.location = location
         self.sprite = py.image.load(spritePath).convert_alpha()
         self.rect = self.sprite.get_rect()
         self.spritePath = spritePath
+        self.isWall = isWall
 
     def place(self, screen):
         self.rect.topleft = ((self.location[0]) * 128, (self.location[1]) * 128)
