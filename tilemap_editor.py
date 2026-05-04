@@ -82,7 +82,7 @@ while True:
                         scrollPause = True                
             elif event.type == py.KEYDOWN:
                 if event.key == py.K_e:
-                    export(tiles)
+                    export(tiles, walls)
                 elif event.key == py.K_w:
                     mode = "walls"
 
@@ -139,5 +139,7 @@ while True:
                     wallCurrent = "delete"
                 elif event.key == py.K_t:
                     mode = "tiles"
+                elif event.key == py.K_e:
+                    export(tiles, walls)
         
         py.display.flip()
