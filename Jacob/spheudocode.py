@@ -20,7 +20,7 @@ class MWeapon:
         if self.type == "pawn" or self.type == "bishop":
             for x in range(enemeypos[0] - self.range, enemeypos[0] + self.range):
                 for y in range(enemeypos[1] - self.range, enemeypos[1] + self.range):
-                    if (x, y) != enemeypos and (x, y) not in occupied and in_bounds(x, y):  # fix-ed bounds check
+                    if (x, y) != enemeypos and (x, y) not in occupied and in_bounds(x, y):
                         squares.append((x, y))
         elif self.type == "rook": 
             for i in range(self.range * 3):
@@ -94,7 +94,17 @@ class Monster:
             if bdx == bdy and bdx > 0:  # fix-ed bdx > 0 ensures not same tile; only fire when truly on a diagonal
                 return Projectile(self.projectile_sprite, self.location, playerpos, speed=5, damage=self.damage)  # fix-ed use pre_move_location
             return 0  # fix-ed not on a diagonal, no projectile
-            
+
+        if self.weapon.type == "pawn":
+            target = playerpos
+            closest_point = self.location
+            min_dist = float('inf')
+            for p in squares:
+                dist = math.sqrt((p[0] - target[0])**2 + (p[1] - target[1])**2)
+                print(f"distance: {dist}")
+                if dist < min_dist:
+                    min_dist = dist
+                    closest_point = p
         target = playerpos
         closest_point = self.location
         min_dist = float('inf')
