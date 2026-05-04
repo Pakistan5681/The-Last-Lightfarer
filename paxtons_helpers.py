@@ -165,10 +165,12 @@ class Monster:
 
 
 class Tile:
-    def __init__(self, location, spritePath):
+    def __init__(self, location, spritePath, isWall):
         self.location = location
         self.sprite = py.image.load(spritePath).convert_alpha()
         self.rect = self.sprite.get_rect()
+        self.spritePath = spritePath
+        self.isWall = isWall
 
     def place(self, screen):
         self.rect.topleft = ((self.location[0]) * 128, (self.location[1]) * 128)
@@ -176,15 +178,9 @@ class Tile:
         screen.blit(outSprite, self.rect.topleft)
 
 class Tilemap:
-    def __init__(self, size, tileCategory):
+    def __init__(self, size, tilemap):
         self.size = size
-        baseTiles = []
-        for x in range(size[0]):
-            for y in range(size[1]):
-                newTile = Tile((x, y), get_random_tile(tileCategory))
-                baseTiles.append(newTile)
-
-        self.tiles = baseTiles
+        self.tiles = tilemap
 
     def draw(self, screen):
         for t in self.tiles: t.place(screen)
@@ -242,7 +238,7 @@ class Player:
         self.sprite = py.image.load("sprites//MCfront//Idle.png").convert_alpha()
         self.rect = self.sprite.get_rect()
         self.health = 100
-        self.weapon = Weapon("Lantern", 5, "warrior", 3)
+        self.weapon = Weapon("Lantern", 5, "blitzer", 1)
         self.speed = 5
 
     def place(self, screen):
@@ -276,7 +272,7 @@ def get_random_tile(category):
 
     match category:
         case "dirt":
-            dirtList = ["sprites//dirt_ground_5.png", "sprites//dirt_ground_4.png", "sprites//dirt_ground_3.png", "sprites//dirt_ground_2.png", "sprites//dirt_ground_1.png"]
+            dirtList = ["sprites//Tiles//dirt//dirt_ground_5.png", "sprites//Tiles//dirt//dirt_ground_4.png", "sprites//Tiles//dirt//dirt_ground_3.png", "sprites//Tiles//dirt//dirt_ground_2.png", "sprites//Tiles//dirt//dirt_ground_1.png"]
             return choice(dirtList)
         
 def get_tile_mouse_pos():

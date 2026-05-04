@@ -17,7 +17,7 @@ class MWeapon:
         def in_bounds(x, y):  # fix-ed helper to clamp to board
             return 0 <= x < screensize[0] and 0 <= y < screensize[1]
 
-        if self.type == "pawn":
+        if self.type == "pawn" or self.type == "bishop":
             for x in range(enemeypos[0] - self.range, enemeypos[0] + self.range):
                 for y in range(enemeypos[1] - self.range, enemeypos[1] + self.range):
                     if (x, y) != enemeypos and (x, y) not in occupied and in_bounds(x, y):
