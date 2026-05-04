@@ -51,6 +51,7 @@ def export(tiles, walls):
         json.dump(outString, file)
 
 def getIsWall(pos, walls):
+
     for i in walls:
         if i.location == pos:
             return True
