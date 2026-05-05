@@ -1,7 +1,6 @@
 import pygame as py
-from paxtons_helpers import Player, Tile, Tilemap, get_tile_mouse_pos
-from Jacob.spheudocode import MWeapon, Monster
-from Jacob.proj import Projectile
+from paxtons_helpers import Player, Tile, Tilemap, get_tile_mouse_pos, Projectile, MWeapon, Monster
+
 
 py.init()
 
@@ -15,7 +14,7 @@ tiles = [Tile((4, 0), 'sprites//Tiles//other//wotar.png', True), Tile((4, 1), 's
 tilemap = Tilemap(size, tiles)
 player = Player()
 
-monsters = [Monster("sprites/flame hop/flame hopper v1-1.png.png", (3, 3), MWeapon("Generic Ah Weapon", 5, "bishop", 2),5)]
+monsters = [Monster("sprites/Drpplet/Dropplet.png", (3, 3), MWeapon("Generic Ah Weapon", 5, "bishop", 2),1000,"sprites/Player Attacks/fireball_01.png")]
 running = True
 attackSquares = None
 moveSquares = None
@@ -48,9 +47,15 @@ while running:
             if t.isWall: occupied.append(t.location)
 
         for i in monsters:
-            result = i.move(player.location, size, occupied)  # fix-ed capture return value
+            dmg = i.move(player.location, size, occupied)
+            result = dmg  # fix-ed capture return value
+            player.health -= i.damage
+            if player.health == 0:
+                running = False
+                quit()
             if isinstance(result, Projectile):                 # fix-ed store projectile if one was returned
                 active_projectiles.append(result)
+
         currentTurn = "playerMove"
 
     # fix-ed draw and update all live projectiles every frame
@@ -69,6 +74,7 @@ while running:
                     for i in attackSquares: locations.append(i.location)
 
                     if get_tile_mouse_pos() in locations:
+                        active_projectiles.append(Projectile("sprites//Player Attacks//fireball_01.png", player.location, get_tile_mouse_pos(), 10, 20))
                         attackSquares = None
                         currentTurn = "monsterMove"
                 elif currentTurn == "playerMove":

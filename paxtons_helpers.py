@@ -6,8 +6,7 @@ from time import sleep
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 class Projectile:
-    def __init__(self, spritePath, startpos, targetpos, speed, damage):
-        self.sprite = py.image.load(spritePath).convert_alpha()
+    def __init__(self, spritePath, startpos, targetpos, speed, damage):       
         self.x = float(startpos[0] * 128)
         self.y = float(startpos[1] * 128)
         self.targetx = float(targetpos[0] * 128)
@@ -15,8 +14,9 @@ class Projectile:
         self.speed = speed
         self.damage = damage
         self.alive = True
-
-        
+        angle = -math.degrees(math.atan2((self.targety - startpos[1]), (self.targetx - startpos[0])))
+        baseSprite = py.transform.scale(py.image.load(spritePath).convert_alpha(),(400,400))
+        self.sprite = py.transform.rotate(baseSprite, angle)
 
     def draw(self, screen, player):
         horizontal_distance = self.targetx - self.x
@@ -24,7 +24,7 @@ class Projectile:
         total_distance = math.sqrt(horizontal_distance**2 + vertical_distance**2)
 
         if total_distance <= self.speed:
-            
+            player.health -= self.damage
             self.alive = False
         else:
             self.x += (horizontal_distance / total_distance) * self.speed
@@ -88,8 +88,7 @@ class MWeapon:
             return squares
         
         return squares
-    def damage():
-        return damage
+
     
 
 class Monster:
@@ -155,7 +154,7 @@ class Monster:
         dy = abs(self.location[1] - playerpos[1])
         if dx <= 1 and dy <= 1 and (dx + dy) > 0:
             return self.damage  # fix-ed melee hit — return damage int, no projectile
-        return 0  # fix-ed non-bishop types never fire a projectile
+        return self.damage  # fix-ed non-bishop types never fire a projectile
     
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -244,7 +243,7 @@ class Player:
         self.sprite = py.image.load("sprites//MCfront//Idle.png").convert_alpha()
         self.rect = self.sprite.get_rect()
         self.health = 100
-        self.weapon = Weapon("Lantern", 5, "marksman", 1)
+        self.weapon = Weapon("Lantern", 40, "marksman", 1)
         self.speed = 5
 
     def place(self, screen):
@@ -303,8 +302,6 @@ clock = py.time.Clock()
 tilemap = Tilemap(size, "dirt")
 player = Player()
 
-monsters = [Monster("sprites/flame hop/flame hopper v1-1.png.png", (5, 5), MWeapon("Generic Ah Weapon", 5, "pawn", 2),5),Monster("sprites/flame hop/flame hopper v1-1.png.png", (5, 6), MWeapon("Generic Ah Weapon", 5, "Knight", 2),5),Monster("sprites/flame hop/flame hopper v1-1.png.png", (5, 7), MWeapon("Generic Ah Weapon", 5, "bishop", 2),5),Monster("sprites/flame hop/flame hopper v1-1.png.png", (6, 5), MWeapon("Generic Ah Weapon", 5, "rook", 2),5)]
-running = True
 attackSquares = None
 moveSquares = None
 active_projectiles = []  # fix-ed list to hold live projectiles so they can be drawn 
