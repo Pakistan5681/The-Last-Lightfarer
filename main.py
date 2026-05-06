@@ -1,10 +1,15 @@
 import pygame as py
+import time as t
 from paxtons_helpers import Player, Tile, Tilemap, get_tile_mouse_pos, Projectile, MWeapon, Monster
+from main_menu import menu
+from helpers import is_adjacent
 
 
 py.init()
 
 size = (10, 10)
+
+# menu()
 
 screen = py.display.set_mode((size[0] * 128, size[1] * 128))
 clock = py.time.Clock()
@@ -14,7 +19,7 @@ tiles = [Tile((4, 0), 'sprites//Tiles//other//wotar.png', True), Tile((4, 1), 's
 tilemap = Tilemap(size, tiles)
 player = Player()
 
-monsters = [Monster("sprites/Drpplet/Dropplet.png", (3, 3), MWeapon("Generic Ah Weapon", 5, "bishop", 2),1000,"sprites/Player Attacks/fireball_01.png")]
+monsters = [Monster("sprites/Drpplet/Dropplet.png", (3, 3), MWeapon("Generic Ah Weapon", 5, "bishop", 1), 100,"sprites/Player Attacks/fireball_01.png")]
 running = True
 attackSquares = None
 moveSquares = None
@@ -47,12 +52,20 @@ while running:
             if t.isWall: occupied.append(t.location)
 
         for i in monsters:
-            dmg = i.move(player.location, size, occupied)
-            result = dmg  # fix-ed capture return value
-            player.health -= i.damage
-            if player.health == 0:
-                running = False
-                quit()
+            result= i.move(player.location, size, occupied)
+              # fix-ed capture return value
+            if is_adjacent(player.location,i.location) == True and i.type != "bishop":
+                player.health -= i.damage
+                if player.health <= 0:
+                    running = False
+                    quit()
+            if i.fight == True:
+                i.fight = False
+                t.sleep(5)
+                player.health -= i.damage
+                if player.health <= 0:
+                    running = False
+                    quit()
             if isinstance(result, Projectile):                 # fix-ed store projectile if one was returned
                 active_projectiles.append(result)
 
