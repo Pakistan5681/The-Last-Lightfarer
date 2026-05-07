@@ -1,21 +1,25 @@
 import pygame as py
-from paxtons_helpers import Player, Tile, Tilemap, get_tile_mouse_pos
-from Jacob.spheudocode import MWeapon, Monster
-from Jacob.proj import Projectile
+import time as t
+from paxtons_helpers import Player, Tile, Tilemap, get_tile_mouse_pos, Projectile, MWeapon, Monster
+from main_menu import menu
+from helpers import is_adjacent
+
 
 py.init()
 
 size = (10, 10)
 
+# menu()
+
 screen = py.display.set_mode((size[0] * 128, size[1] * 128))
 clock = py.time.Clock()
 
-tiles = [Tile((1, 1), 'sprites//Tiles//stone//cobble.png'), Tile((1, 1), 'sprites//Tiles//stone//cobble.png'), Tile((1, 1), 'sprites//Tiles//stone//cobble.png'), Tile((6, 6), 'sprites//Tiles//stone//cobble.png'), Tile((7, 7), 'sprites//Tiles//stone//cobble.png'), Tile((8, 8), 'sprites//Tiles//stone//cobble.png'), Tile((7, 7), 'sprites//Tiles//stone//cobble.png'), Tile((6, 6), 'sprites//Tiles//stone//cobble.png'), Tile((3, 3), 'sprites//Tiles//stone//cobble.png'), Tile((2, 2), 'sprites//Tiles//stone//cobble.png'), Tile((2, 2), 'sprites//Tiles//stone//cobble.png'), Tile((3, 3), 'sprites//Tiles//stone//cobble.png'), Tile((2, 2), 'sprites//Tiles//stone//cobble.png'), Tile((3, 3), 'sprites//Tiles//stone//cobble.png'), Tile((2, 2), 'sprites//Tiles//stone//cobble.png'), Tile((3, 3), 'sprites//Tiles//stone//cobble.png'), Tile((7, 7), 'sprites//Tiles//stone//cobble.png'), Tile((6, 6), 'sprites//Tiles//stone//cobble.png'), Tile((3, 3), 'sprites//Tiles//stone//cobble.png'), Tile((2, 2), 'sprites//Tiles//stone//cobble.png'), Tile((2, 2), 'sprites//Tiles//stone//cobble.png'), Tile((3, 3), 'sprites//Tiles//stone//cobble.png'), Tile((6, 6), 'sprites//Tiles//stone//cobble.png'), Tile((2, 2), 'sprites//Tiles//stone//cobble.png'), Tile((6, 6), 'sprites//Tiles//stone//cobble.png'), Tile((7, 7), 'sprites//Tiles//stone//cobble.png'), Tile((6, 6), 'sprites//Tiles//stone//cobble.png'), Tile((2, 2), 'sprites//Tiles//stone//cobble.png'), Tile((3, 3), 'sprites//Tiles//stone//cobble.png'), Tile((7, 7), 'sprites//Tiles//stone//cobble.png'), Tile((7, 7), 'sprites//Tiles//stone//cobble.png'), Tile((2, 2), 'sprites//Tiles//stone//cobble.png'), Tile((1, 1), 'sprites//Tiles//stone//cobble.png'), Tile((2, 2), 'sprites//Tiles//stone//cobble.png'), Tile((3, 3), 'sprites//Tiles//stone//cobble.png'), Tile((6, 6), 'sprites//Tiles//stone//cobble.png'), Tile((7, 7), 'sprites//Tiles//stone//cobble.png'), Tile((7, 7), 'sprites//Tiles//stone//cobble.png'), Tile((6, 6), 'sprites//Tiles//stone//cobble.png'), Tile((4, 4), 'sprites//Tiles//stone//watercobble.png'), Tile((4, 4), 'sprites//Tiles//stone//watercobble.png'), Tile((4, 4), 'sprites//Tiles//stone//watercobble.png'), Tile((4, 4), 'sprites//Tiles//stone//watercobble.png'), Tile((4, 4), 'sprites//Tiles//stone//watercobble.png'), Tile((4, 4), 'sprites//Tiles//stone//watercobble.png'), Tile((4, 4), 'sprites//Tiles//stone//watercobble.png'), Tile((4, 4), 'sprites//Tiles//stone//watercobble.png'), Tile((4, 4), 'sprites//Tiles//stone//watercobble.png'), Tile((4, 4), 'sprites//Tiles//stone//watercobble.png'), Tile((5, 5), 'sprites//Tiles//stone//watercobble.png'), Tile((5, 5), 'sprites//Tiles//stone//watercobble.png'), Tile((5, 5), 'sprites//Tiles//stone//watercobble.png'), Tile((5, 5), 'sprites//Tiles//stone//watercobble.png'), Tile((5, 5), 'sprites//Tiles//stone//watercobble.png'), Tile((5, 5), 'sprites//Tiles//stone//watercobble.png'), Tile((5, 5), 'sprites//Tiles//stone//watercobble.png'), Tile((5, 5), 'sprites//Tiles//stone//watercobble.png'), Tile((5, 5), 'sprites//Tiles//stone//watercobble.png'), Tile((5, 5), 'sprites//Tiles//stone//watercobble.png'), Tile((3, 3), 'sprites//Tiles//stone//watercobble.png'), Tile((3, 3), 'sprites//Tiles//stone//watercobble.png'), Tile((6, 6), 'sprites//Tiles//stone//watercobble.png'), Tile((6, 6), 'sprites//Tiles//stone//watercobble.png'), Tile((0, 0), 'sprites//Tiles//dirt//dirt_ground_5.png'), Tile((0, 0), 'sprites//Tiles//dirt//dirt_ground_5.png'), Tile((0, 0), 'sprites//Tiles//dirt//dirt_ground_5.png'), Tile((0, 0), 'sprites//Tiles//dirt//dirt_ground_5.png'), Tile((1, 1), 'sprites//Tiles//dirt//dirt_ground_5.png'), Tile((9, 9), 'sprites//Tiles//dirt//dirt_ground_5.png'), Tile((8, 8), 'sprites//Tiles//dirt//dirt_ground_5.png'), Tile((8, 8), 'sprites//Tiles//dirt//dirt_ground_5.png'), Tile((8, 8), 'sprites//Tiles//dirt//dirt_ground_5.png'), Tile((9, 9), 'sprites//Tiles//dirt//dirt_ground_5.png'), Tile((9, 9), 'sprites//Tiles//dirt//dirt_ground_5.png'), Tile((9, 9), 'sprites//Tiles//dirt//dirt_ground_5.png'), Tile((9, 9), 'sprites//Tiles//dirt//dirt_ground_5.png'), Tile((9, 9), 'sprites//Tiles//dirt//dirt_ground_5.png'), Tile((7, 7), 'sprites//Tiles//stone//cobble.png'), Tile((7, 7), 'sprites//Tiles//stone//cobble.png'), Tile((8, 8), 'sprites//Tiles//stone//cobble.png'), Tile((8, 8), 'sprites//Tiles//stone//cobble.png'), Tile((8, 8), 'sprites//Tiles//stone//cobble.png'), Tile((1, 1), 'sprites//Tiles//stone//cobble.png'), Tile((1, 1), 'sprites//Tiles//dirt//dirt_ground_5.png'), Tile((8, 8), 'sprites//Tiles//dirt//dirt_ground_5.png'), Tile((9, 9), 'sprites//Tiles//dirt//dirt_ground_4.png'), Tile((0, 0), 'sprites//Tiles//dirt//dirt_ground_4.png'), Tile((0, 0), 'sprites//Tiles//dirt//dirt_ground_4.png'), Tile((0, 0), 'sprites//Tiles//dirt//dirt_ground_4.png'), Tile((1, 1), 'sprites//Tiles//dirt//dirt_ground_4.png'), Tile((1, 1), 'sprites//Tiles//dirt//dirt_ground_4.png'), Tile((0, 0), 'sprites//Tiles//dirt//dirt_ground_1.png'), Tile((1, 1), 'sprites//Tiles//dirt//dirt_ground_1.png'), Tile((0, 0), 'sprites//Tiles//dirt//dirt_ground_1.png'), Tile((0, 0), 'sprites//Tiles//dirt//dirt_ground_1.png'), Tile((8, 8), 'sprites//Tiles//dirt//dirt_ground_1.png'), Tile((9, 9), 'sprites//Tiles//dirt//dirt_ground_1.png'), Tile((9, 9), 'sprites//Tiles//dirt//dirt_ground_1.png'), Tile((8, 8), 'sprites//Tiles//dirt//dirt_ground_1.png'), Tile((9, 9), 'sprites//Tiles//dirt//dirt_ground_1.png')]
+tiles = [Tile((4, 0), 'sprites//Tiles//other//wotar.png', True), Tile((4, 1), 'sprites//Tiles//other//wotar.png', True), Tile((4, 2), 'sprites//Tiles//other//wotar.png', True), Tile((4, 3), 'sprites//Tiles//other//wotar.png', True), Tile((4, 4), 'sprites//Tiles//other//wotar.png', True), Tile((4, 5), 'sprites//Tiles//other//wotar.png', True), Tile((4, 6), 'sprites//Tiles//other//wotar.png', True), Tile((5, 6), 'sprites//Tiles//other//wotar.png', True), Tile((5, 7), 'sprites//Tiles//other//wotar.png', True), Tile((5, 8), 'sprites//Tiles//other//wotar.png', True), Tile((5, 9), 'sprites//Tiles//other//wotar.png', True), Tile((4, 9), 'sprites//Tiles//stone//watercobble.png', False), Tile((4, 8), 'sprites//Tiles//stone//watercobble.png', False), Tile((4, 7), 'sprites//Tiles//stone//watercobble.png', False), Tile((3, 7), 'sprites//Tiles//stone//watercobble.png', False), Tile((3, 6), 'sprites//Tiles//stone//watercobble.png', False), Tile((3, 5), 'sprites//Tiles//stone//watercobble.png', False), Tile((3, 4), 'sprites//Tiles//stone//watercobble.png', False), Tile((3, 3), 'sprites//Tiles//stone//watercobble.png', False), Tile((3, 2), 'sprites//Tiles//stone//watercobble.png', False), Tile((3, 1), 'sprites//Tiles//stone//watercobble.png', False), Tile((3, 0), 'sprites//Tiles//stone//watercobble.png', False), Tile((5, 0), 'sprites//Tiles//stone//watercobble.png', False), Tile((5, 1), 'sprites//Tiles//stone//watercobble.png', False), Tile((5, 2), 'sprites//Tiles//stone//watercobble.png', False), Tile((5, 3), 'sprites//Tiles//stone//watercobble.png', False), Tile((5, 4), 'sprites//Tiles//stone//watercobble.png', False), Tile((5, 5), 'sprites//Tiles//stone//watercobble.png', False), Tile((6, 5), 'sprites//Tiles//stone//watercobble.png', False), Tile((6, 6), 'sprites//Tiles//stone//watercobble.png', False), Tile((6, 7), 'sprites//Tiles//stone//watercobble.png', False), Tile((6, 8), 'sprites//Tiles//stone//watercobble.png', False), Tile((6, 9), 'sprites//Tiles//stone//watercobble.png', False), Tile((1, 0), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((1, 1), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((2, 2), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((2, 3), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((2, 5), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((1, 5), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((1, 6), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((1, 7), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((1, 8), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((1, 9), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((2, 9), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((2, 8), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((0, 9), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((0, 8), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((0, 7), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((0, 6), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((0, 0), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((0, 1), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((0, 2), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((0, 3), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((0, 4), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((1, 3), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((1, 2), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((1, 4), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((0, 5), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((6, 3), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((7, 0), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((8, 0), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((9, 0), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((9, 1), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((9, 4), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((9, 5), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((9, 6), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((9, 7), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((9, 8), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((9, 9), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((8, 9), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((7, 5), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((7, 4), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((7, 3), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((7, 2), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((7, 1), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((8, 1), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((8, 2), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((8, 3), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((8, 4), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((9, 2), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((9, 3), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((8, 5), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((8, 6), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((8, 7), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((8, 8), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((6, 4), 'sprites//Tiles//stone//cobble.png', False), Tile((2, 4), 'sprites//Tiles//stone//cobble.png', False), Tile((3, 8), 'sprites//Tiles//stone//cobble.png', False), Tile((2, 1), 'sprites//Tiles//stone//cobble.png', False), Tile((6, 0), 'sprites//Tiles//stone//cobble.png', False), Tile((7, 9), 'sprites//Tiles//stone//cobble.png', False), Tile((7, 7), 'sprites//Tiles//stone//cobble.png', False), Tile((2, 6), 'sprites//Tiles//stone//cobble.png', False), Tile((2, 7), 'sprites//Tiles//dirt//dirt_ground_5.png', False), Tile((2, 0), 'sprites//Tiles//dirt//dirt_ground_4.png', False), Tile((6, 2), 'sprites//Tiles//dirt//dirt_ground_4.png', False), Tile((7, 8), 'sprites//Tiles//dirt//dirt_ground_4.png', False), Tile((3, 9), 'sprites//Tiles//dirt//dirt_ground_4.png', False), Tile((7, 6), 'sprites//Tiles//dirt//dirt_ground_2.png', False), Tile((6, 1), 'sprites//Tiles//dirt//dirt_ground_2.png', False)]
 
 tilemap = Tilemap(size, tiles)
 player = Player()
 
-monsters = [Monster("sprites/flame hop/flame hopper v1-1.png.png", (3, 3), MWeapon("Generic Ah Weapon", 5, "bishop", 2),5)]
+monsters = [Monster("sprites/Drpplet/Dropplet.png", (3, 3), MWeapon("Generic Ah Weapon", 5, "bishop", 1), 100,"sprites/Player Attacks/fireball_01.png")]
 running = True
 attackSquares = None
 moveSquares = None
@@ -36,18 +40,35 @@ while running:
         monsterPos.append(i.location)
 
     if currentTurn == "playerAttack":
-        if attackSquares == None : attackSquares = player.attack(size)
+        if attackSquares == None : attackSquares = player.attack(size, tiles)
         for i in attackSquares: i.place(screen)
     elif currentTurn == "playerMove":
-        if moveSquares == None: moveSquares = player.move(monsterPos)
+        if moveSquares == None: moveSquares = player.move(monsterPos, tiles)
         for i in moveSquares: i.place(screen)
     else:
         # fix-ed pass monsterPos as occupied so monsters don't stack on each other or the player
         occupied = monsterPos + [player.location]
+        for t in tiles: 
+            if t.isWall: occupied.append(t.location)
+
         for i in monsters:
-            result = i.move(player.location, size, occupied)  # fix-ed capture return value
+            result= i.move(player.location, size, occupied)
+              # fix-ed capture return value
+            if is_adjacent(player.location,i.location) == True and i.type != "bishop":
+                player.health -= i.damage
+                if player.health <= 0:
+                    running = False
+                    quit()
+            if i.fight == True:
+                i.fight = False
+                t.sleep(5)
+                player.health -= i.damage
+                if player.health <= 0:
+                    running = False
+                    quit()
             if isinstance(result, Projectile):                 # fix-ed store projectile if one was returned
                 active_projectiles.append(result)
+
         currentTurn = "playerMove"
 
     # fix-ed draw and update all live projectiles every frame
@@ -66,6 +87,7 @@ while running:
                     for i in attackSquares: locations.append(i.location)
 
                     if get_tile_mouse_pos() in locations:
+                        active_projectiles.append(Projectile("sprites//Player Attacks//fireball_01.png", player.location, get_tile_mouse_pos(), 10, 20))
                         attackSquares = None
                         currentTurn = "monsterMove"
                 elif currentTurn == "playerMove":

@@ -6,8 +6,7 @@ from time import sleep
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 class Projectile:
-    def __init__(self, spritePath, startpos, targetpos, speed, damage):
-        self.sprite = py.image.load(spritePath).convert_alpha()
+    def __init__(self, spritePath, startpos, targetpos, speed, damage):       
         self.x = float(startpos[0] * 128)
         self.y = float(startpos[1] * 128)
         self.targetx = float(targetpos[0] * 128)
@@ -15,8 +14,9 @@ class Projectile:
         self.speed = speed
         self.damage = damage
         self.alive = True
-
-        
+        angle = -math.degrees(math.atan2((self.targety - startpos[1]), (self.targetx - startpos[0])))
+        baseSprite = py.transform.scale(py.image.load(spritePath).convert_alpha(),(400,400))
+        self.sprite = py.transform.rotate(baseSprite, angle)
 
     def draw(self, screen, player):
         horizontal_distance = self.targetx - self.x
@@ -24,7 +24,7 @@ class Projectile:
         total_distance = math.sqrt(horizontal_distance**2 + vertical_distance**2)
 
         if total_distance <= self.speed:
-            
+            player.health -= self.damage
             self.alive = False
         else:
             self.x += (horizontal_distance / total_distance) * self.speed
@@ -54,13 +54,13 @@ class MWeapon:
                     if (x, y) != enemeypos and (x, y) not in occupied and in_bounds(x, y):
                         squares.append((x, y))
         elif self.type == "rook": 
-            for i in range(self.range * 3):
+            for i in range(1, self.range + 1):
                 if in_bounds(enemeypos[0], enemeypos[1] + i) and (enemeypos[0], enemeypos[1] + i) not in occupied: squares.append((enemeypos[0], enemeypos[1] + i))      # fix-ed bounds
                 if in_bounds(enemeypos[0], enemeypos[1] - i) and (enemeypos[0], enemeypos[1] - i) not in occupied: squares.append((enemeypos[0], enemeypos[1] - i))      # fix-ed bounds
                 if in_bounds(enemeypos[0] + i, enemeypos[1]) and (enemeypos[0] + i, enemeypos[1]) not in occupied: squares.append((enemeypos[0] + i, enemeypos[1]))      # fix-ed bounds
                 if in_bounds(enemeypos[0] - i, enemeypos[1]) and (enemeypos[0] - i, enemeypos[1]) not in occupied: squares.append((enemeypos[0] - i, enemeypos[1]))      # fix-ed bounds
         elif self.type == "bishop":
-            for i in range(1, self.range * 3):  # fix-ed start at 1 to skip own tile
+            for i in range(1, self.range + 1):  # fix-ed start at 1 to skip own tile
                 if in_bounds(enemeypos[0] + i, enemeypos[1] + i) and (enemeypos[0] + i, enemeypos[1] + i) not in occupied: psquares.append((enemeypos[0] + i, enemeypos[1] + i))  # fix-ed bounds
                 if in_bounds(enemeypos[0] - i, enemeypos[1] - i) and (enemeypos[0] - i, enemeypos[1] - i) not in occupied: psquares.append((enemeypos[0] - i, enemeypos[1] - i))  # fix-ed bounds
                 if in_bounds(enemeypos[0] + i, enemeypos[1] - i) and (enemeypos[0] + i, enemeypos[1] - i) not in occupied: psquares.append((enemeypos[0] + i, enemeypos[1] - i))  # fix-ed bounds
@@ -86,7 +86,21 @@ class MWeapon:
                 if sq not in occupied and in_bounds(sq[0], sq[1]): 
                     squares.append(sq)
             return squares
-        
+        elif self.type == "queen":
+            for i in range(1, self.range + 1):
+                if in_bounds(enemeypos[0], enemeypos[1] + i) and (enemeypos[0], enemeypos[1] + i) not in occupied: squares.append((enemeypos[0], enemeypos[1] + i))      # fix-ed bounds
+                if in_bounds(enemeypos[0], enemeypos[1] - i) and (enemeypos[0], enemeypos[1] - i) not in occupied: squares.append((enemeypos[0], enemeypos[1] - i))      # fix-ed bounds
+                if in_bounds(enemeypos[0] + i, enemeypos[1]) and (enemeypos[0] + i, enemeypos[1]) not in occupied: squares.append((enemeypos[0] + i, enemeypos[1]))      # fix-ed bounds
+                if in_bounds(enemeypos[0] - i, enemeypos[1]) and (enemeypos[0] - i, enemeypos[1]) not in occupied: squares.append((enemeypos[0] - i, enemeypos[1]))      # fix-ed bounds
+            for i in range(1, self.range + 1):  # fix-ed start at 1 to skip own tile
+                if in_bounds(enemeypos[0] + i, enemeypos[1] + i) and (enemeypos[0] + i, enemeypos[1] + i) not in occupied: squares.append((enemeypos[0] + i, enemeypos[1] + i))  # fix-ed bounds
+                if in_bounds(enemeypos[0] - i, enemeypos[1] - i) and (enemeypos[0] - i, enemeypos[1] - i) not in occupied: squares.append((enemeypos[0] - i, enemeypos[1] - i))  # fix-ed bounds
+                if in_bounds(enemeypos[0] + i, enemeypos[1] - i) and (enemeypos[0] + i, enemeypos[1] - i) not in occupied: squares.append((enemeypos[0] + i, enemeypos[1] - i))  # fix-ed bounds
+                if in_bounds(enemeypos[0] - i, enemeypos[1] + i) and (enemeypos[0] - i, enemeypos[1] + i) not in occupied: squares.append((enemeypos[0] - i, enemeypos[1] + i))  # fix-ed bounds
+            for x in range(enemeypos[0] - self.range, enemeypos[0] + self.range + 1):  # fix-ed +1 so range is inclusive
+                for y in range(enemeypos[1] - self.range, enemeypos[1] + self.range + 1):  # fix-ed +1 so range is inclusive
+                    if (x, y) != enemeypos and (x, y) not in occupied and in_bounds(x, y):
+                        squares.append((x, y))
         return squares
 
     
@@ -100,6 +114,7 @@ class Monster:
         self.weapon = weapon
         self.damage = damage
         self.projectile_sprite = projectile_sprite
+        self.fight = False
 
     def place(self, screen):
         print(self.location)
@@ -126,6 +141,7 @@ class Monster:
             bdx = abs(self.location[0] - playerpos[0])
             bdy = abs(self.location[1] - playerpos[1])
             if bdx == bdy and bdx > 0:  # fix-ed bdx > 0 ensures not same tile; only fire when truly on a diagonal
+                self.fight = True
                 return Projectile(self.projectile_sprite, self.location, playerpos, speed=5, damage=self.damage)  # fix-ed use pre_move_location
             return 0  # fix-ed not on a diagonal, no projectile
 
@@ -154,7 +170,7 @@ class Monster:
         dy = abs(self.location[1] - playerpos[1])
         if dx <= 1 and dy <= 1 and (dx + dy) > 0:
             return self.damage  # fix-ed melee hit — return damage int, no projectile
-        return 0  # fix-ed non-bishop types never fire a projectile
+        return self.damage  # fix-ed non-bishop types never fire a projectile
     
 
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -191,32 +207,38 @@ class Weapon:
         self.type = type
         self.range = range
 
-    def get_attack_squares(self, playerpos, screensize):
+    def getIsWall(self, position, tiles):
+        for t in tiles:
+            if t.location == position:
+                if t.isWall: return True
+                else: return False
+
+    def get_attack_squares(self, playerpos, screensize, tiles):
         squares = []
 
         if self.type == "warrior": # Warrior targets the adjacent squares 
             for x in range(playerpos[0] - self.range, playerpos[0] + self.range + 1):
                 for y in range(playerpos[1] - self.range, playerpos[1] + self.range + 1):
-                    if (x, y) != playerpos and x >= 0 and y >= 0: squares.append((x, y))
+                    if (x, y) != playerpos and x >= 0 and y >= 0 and not self.getIsWall((x, y), tiles): squares.append((x, y))
         elif self.type == "marksman": # Marksman targets in a cross + pattern
             for i in range((self.range * 2) + 1):
-                if playerpos[1] + i >= 0 and (playerpos[0], playerpos[1] + i) != playerpos: squares.append((playerpos[0], playerpos[1] + i))
-                if playerpos[1] - i >= 0 and (playerpos[0], playerpos[1] - i) != playerpos: squares.append((playerpos[0], playerpos[1] - i))
-                if playerpos[0] + i >= 0 and (playerpos[0] + i, playerpos[1]) != playerpos: squares.append((playerpos[0] + i, playerpos[1]))
-                if playerpos[0] - i >= 0 and (playerpos[0] - i, playerpos[1]) != playerpos: squares.append((playerpos[0] - i, playerpos[1]))
+                if playerpos[1] + i >= 0 and (playerpos[0], playerpos[1] + i) != playerpos and not self.getIsWall((playerpos[0], playerpos[1] + i), tiles): squares.append((playerpos[0], playerpos[1] + i))
+                if playerpos[1] - i >= 0 and (playerpos[0], playerpos[1] - i) != playerpos and not self.getIsWall((playerpos[0], playerpos[1] - i), tiles): squares.append((playerpos[0], playerpos[1] - i))
+                if playerpos[0] + i >= 0 and (playerpos[0] + i, playerpos[1]) != playerpos and not self.getIsWall((playerpos[0] + i, playerpos[1]), tiles): squares.append((playerpos[0] + i, playerpos[1]))
+                if playerpos[0] - i >= 0 and (playerpos[0] - i, playerpos[1]) != playerpos and not self.getIsWall((playerpos[0] - i, playerpos[1]), tiles): squares.append((playerpos[0] - i, playerpos[1]))
         elif self.type == "assassin": # assassin targets in a diagonal x pattern
             for i in range((self.range * 2) + 1):
-                if playerpos[0] + i >= 0 and playerpos[1] + i >= 0 and (playerpos[0] + i, playerpos[1] + i) != playerpos: squares.append((playerpos[0] + i, playerpos[1] + i))
-                if playerpos[0] - i >= 0 and playerpos[1] - i >= 0 and (playerpos[0] - i, playerpos[1] - i) != playerpos: squares.append((playerpos[0] - i, playerpos[1] - i))
-                if playerpos[0] + i >= 0 and playerpos[1] - i >= 0 and (playerpos[0] + i, playerpos[1] - i) != playerpos: squares.append((playerpos[0] + i, playerpos[1] - i))
-                if playerpos[0] - i >= 0 and playerpos[1] + i >= 0 and (playerpos[0] - i, playerpos[1] + i) != playerpos: squares.append((playerpos[0] - i, playerpos[1] + i))
+                if playerpos[0] + i >= 0 and playerpos[1] + i >= 0 and (playerpos[0] + i, playerpos[1] + i) != playerpos and not self.getIsWall((playerpos[0] + i, playerpos[1] + i), tiles): squares.append((playerpos[0] + i, playerpos[1] + i))
+                if playerpos[0] - i >= 0 and playerpos[1] - i >= 0 and (playerpos[0] - i, playerpos[1] - i) != playerpos and not self.getIsWall((playerpos[0] - i, playerpos[1] - i), tiles): squares.append((playerpos[0] - i, playerpos[1] - i))
+                if playerpos[0] + i >= 0 and playerpos[1] - i >= 0 and (playerpos[0] + i, playerpos[1] - i) != playerpos and not self.getIsWall((playerpos[0] + i, playerpos[1] - i), tiles): squares.append((playerpos[0] + i, playerpos[1] - i))
+                if playerpos[0] - i >= 0 and playerpos[1] + i >= 0 and (playerpos[0] - i, playerpos[1] + i) != playerpos and not self.getIsWall((playerpos[0] - i, playerpos[1] + i), tiles): squares.append((playerpos[0] - i, playerpos[1] + i))
         elif self.type == "blitzer": # Blitzer targets many random squares
             for i in range(self.range * 15):
                 newSquare = playerpos
                 while (newSquare in squares) or newSquare == playerpos:
                     newSquare = (randint(0, screensize[0]), randint(0, screensize[1]))
 
-                squares.append(newSquare)
+                if not self.getIsWall(newSquare, tiles): squares.append(newSquare)
 
         return squares
     
@@ -237,7 +259,7 @@ class Player:
         self.sprite = py.image.load("sprites//MCfront//Idle.png").convert_alpha()
         self.rect = self.sprite.get_rect()
         self.health = 100
-        self.weapon = Weapon("Lantern", 5, "blitzer", 1)
+        self.weapon = Weapon("Lantern", 327684632854763254, "marksman", 1)
         self.speed = 5
 
     def place(self, screen):
@@ -245,19 +267,25 @@ class Player:
         outSprite = py.transform.scale(self.sprite, (128, 128))
         screen.blit(outSprite, self.rect.topleft)
 
-    def attack(self, tilemapSize):
-        attackTiles = self.weapon.get_attack_squares(self.location, tilemapSize)
+    def attack(self, tilemapSize, tiles):
+        attackTiles = self.weapon.get_attack_squares(self.location, tilemapSize, tiles)
         out = []
         for i in attackTiles:
             out.append(DisplaySprite("sprites//Indicators//attack_indicator.png", i))
 
         return out
     
-    def move(self, monsters):
+    def getIsWall(self, position, tiles):
+        for t in tiles:
+            if t.location == position:
+                if t.isWall: return True
+                else: return False
+    
+    def move(self, monsters, tiles):
         squares = []
         for x in range(self.location[0] - self.speed, self.location[0] + self.speed + 1):
             for y in range(self.location[1] - self.speed, self.location[1] + self.speed + 1):
-                if (x, y) != self.location and x >= 0 and y >= 0 and (not (x, y) in monsters): squares.append(DisplaySprite("sprites//Indicators//move_indicator.png", (x, y)))
+                if (x, y) != self.location and x >= 0 and y >= 0 and (not (x, y) in monsters) and not self.getIsWall((x, y), tiles): squares.append(DisplaySprite("sprites//Indicators//move_indicator.png", (x, y)))
 
         return squares
 
@@ -290,12 +318,11 @@ clock = py.time.Clock()
 tilemap = Tilemap(size, "dirt")
 player = Player()
 
-monsters = [Monster("sprites/flame hop/flame hopper v1-1.png.png", (5, 5), MWeapon("Generic Ah Weapon", 5, "pawn", 2),5),Monster("sprites/flame hop/flame hopper v1-1.png.png", (5, 6), MWeapon("Generic Ah Weapon", 5, "Knight", 2),5),Monster("sprites/flame hop/flame hopper v1-1.png.png", (5, 7), MWeapon("Generic Ah Weapon", 5, "bishop", 2),5),Monster("sprites/flame hop/flame hopper v1-1.png.png", (6, 5), MWeapon("Generic Ah Weapon", 5, "rook", 2),5)]
-running = True
 attackSquares = None
 moveSquares = None
 active_projectiles = []  # fix-ed list to hold live projectiles so they can be drawn 
 
+<<<<<<< HEAD
 currentTurn = "playerAttack" # A variable that decides what actions can take place (i.e. playerAttack means it is the players attack phase)
 
 while running:
@@ -353,3 +380,6 @@ while running:
                         currentTurn = "playerAttack"
 
     py.display.flip()
+=======
+currentTurn = "playerAttack" # A variable that decides what actions can take place (i.e. playerAttack means it is the players attack phase)
+>>>>>>> a55e8622389111a27635bc9042236e2df29ec905
