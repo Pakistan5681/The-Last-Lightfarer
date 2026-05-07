@@ -88,8 +88,7 @@ class MWeapon:
             return squares
         
         return squares
-    def damage():
-        return damage
+
     
 
 class Monster:
@@ -324,7 +323,6 @@ while running:
             result = i.move(player.location, size, occupied)  # fix-ed capture return value
             if isinstance(result, Projectile):                 # fix-ed store projectile if one was returned
                 active_projectiles.append(result)
-        player.health -= M
         currentTurn = "playerMove"
 
     # fix-ed draw and update all live projectiles every frame
