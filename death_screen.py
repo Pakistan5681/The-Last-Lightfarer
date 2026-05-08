@@ -6,21 +6,15 @@ def death():
     titleFont = py.font.Font("Fonts//Felipa-Regular.ttf", 150)
     buttonFont = py.font.Font("Fonts//Felipa-Regular.ttf", 75)
 
-    mainTextS = titleFont.render("The Last Lightfarer", True, (255, 200, 0))
+    mainTextS = titleFont.render("You Died", True, (176, 0, 0))
 
     startButton = py.transform.scale(py.image.load("sprites//GUI//button.png").convert_alpha(), (525, 256))
     startButtonText = buttonFont.render("Retart", True, (8, 0, 36))
-    startRect = startButton.get_rect(topleft=(750, 250))
+    startRect = startButton.get_rect(topleft=(650, 250))
 
     quitButton = py.transform.scale(py.image.load("sprites//GUI//button.png").convert_alpha(), (525, 256))
     quitText = buttonFont.render("Quit", True, (8, 0, 36))
-    quitRect = startButton.get_rect(topleft=(750, 500))
-
-    playerImage = py.transform.scale(py.image.load("sprites//MCfront//Idle.png").convert_alpha(), (1000, 1000))
-    playerRect = playerImage.get_rect(topleft=(-200, 50))
-
-    monsterImage = py.transform.scale(py.image.load("sprites//sylf//sylphwing-left-facing-with-vfx.png.png").convert_alpha(), (600, 600))
-    monsterRect = playerImage.get_rect(topleft=(1300, 250))
+    quitRect = startButton.get_rect(topleft=(650, 500))
 
     running = True
     while running:
@@ -47,17 +41,14 @@ def death():
 
             if mouse_buttons[0]:
                 return False   
-        
-        screen.blit(playerImage, playerRect)
-        screen.blit(monsterImage, monsterRect)
 
-        screen.blit(mainTextS, (550, 50))
+        screen.blit(mainTextS, (650, 50))
 
         screen.blit(startTint, startRect)
-        screen.blit(startButtonText, (950, 320))
+        screen.blit(startButtonText, (850, 320))
 
         screen.blit(quitTint, quitRect)
-        screen.blit(quitText, (950, 570))
+        screen.blit(quitText, (850, 570))
 
         
 

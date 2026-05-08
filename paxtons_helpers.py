@@ -1,7 +1,6 @@
 import pygame as py
 from random import randint, choice
 import math
-from time import sleep
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -101,9 +100,7 @@ class MWeapon:
                 for y in range(enemeypos[1] - self.range, enemeypos[1] + self.range + 1):  # fix-ed +1 so range is inclusive
                     if (x, y) != enemeypos and (x, y) not in occupied and in_bounds(x, y):
                         squares.append((x, y))
-        return squares
-
-    
+        return squares 
 
 class Monster:
     def __init__(self, spriteImage, location, weapon, damage=5, projectile_sprite="sprites/sylf/sylphwing-spell.png"):
@@ -259,7 +256,7 @@ class Player:
         self.sprite = py.image.load("sprites//MCfront//Idle.png").convert_alpha()
         self.rect = self.sprite.get_rect()
         self.health = 100
-        self.weapon = Weapon("Lantern", 50, "marksman", 1)
+        self.weapon = Weapon("Lantern", 50, "blitzer", 1)
         self.speed = 5
 
     def place(self, screen):
@@ -288,6 +285,26 @@ class Player:
                 if (x, y) != self.location and x >= 0 and y >= 0 and (not (x, y) in monsters) and not self.getIsWall((x, y), tiles): squares.append(DisplaySprite("sprites//Indicators//move_indicator.png", (x, y)))
 
         return squares
+    
+
+def proj_transition(activeProjectiles, screen, player, monsters, tilemap):
+    while activeProjectiles:
+        screen.fill((0, 0, 255))
+        
+        tilemap.draw(screen)
+        player.place(screen)
+
+        for i in monsters: 
+            i.place(screen)
+
+        for i in activeProjectiles:
+            i.draw(screen, player)
+            if not i.alive: activeProjectiles.remove(i)
+
+        
+
+        py.display.flip()
+
 
 
 def get_random_tile(category):  
@@ -307,19 +324,3 @@ def get_tile_mouse_pos():
     mouseX = math.floor(mousepos[0] / 128)
     mouseY = math.floor(mousepos[1] / 128)
     return (mouseX, mouseY)
-
-py.init()
-
-size = (11, 11)
-
-screen = py.display.set_mode((size[0] * 128, size[1] * 128))
-clock = py.time.Clock()
-
-tilemap = Tilemap(size, "dirt")
-player = Player()
-
-attackSquares = None
-moveSquares = None
-active_projectiles = []  # fix-ed list to hold live projectiles so they can be drawn 
-
-currentTurn = "playerAttack" # A variable that decides what actions can take place (i.e. playerAttack means it is the players attack phase)
