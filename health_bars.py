@@ -15,8 +15,8 @@ class PRbar():
         self.rect.center = (0,0)
         new_width = self.rect.width - 10
         if new_width > 0:
-            new_image = py.transform.scale(self.rect, (new_width, self.rect.height))
-            self.rect = new_image
+            new_image = py.transform.scale(self.image, (new_width, self.rect.height))
+            self.rect = new_image.get_rect()
             self.rect.width = new_width
 
 
