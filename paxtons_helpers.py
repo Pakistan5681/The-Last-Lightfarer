@@ -23,7 +23,6 @@ class Projectile:
         total_distance = math.sqrt(horizontal_distance**2 + vertical_distance**2)
 
         if total_distance <= self.speed:
-            player.health -= self.damage
             self.alive = False
         else:
             self.x += (horizontal_distance / total_distance) * self.speed
@@ -197,6 +196,14 @@ class Tilemap:
     def draw(self, screen):
         for t in self.tiles: t.place(screen)
 
+class Level:
+    def __init__(self, monsters, tilemap):
+        self.tilemap = tilemap
+        self.monsters = monsters
+
+    def get_level_data(self):
+        return self.tilemap, self.monsters
+
 class Weapon:
     def __init__(self, name, damage, type, range):
         self.name = name
@@ -256,7 +263,7 @@ class Player:
         self.sprite = py.image.load("sprites//MCfront//Idle.png").convert_alpha()
         self.rect = self.sprite.get_rect()
         self.health = 100
-        self.weapon = Weapon("Lantern", 50, "blitzer", 1)
+        self.weapon = Weapon("Lantern", 50, "assassin", 2)
         self.speed = 5
 
     def place(self, screen):
