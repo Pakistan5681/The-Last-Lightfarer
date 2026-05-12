@@ -9,7 +9,7 @@ def death():
     mainTextS = titleFont.render("You Died", True, (176, 0, 0))
 
     startButton = py.transform.scale(py.image.load("sprites//GUI//button.png").convert_alpha(), (525, 256))
-    startButtonText = buttonFont.render("Retart", True, (8, 0, 36))
+    startButtonText = buttonFont.render("Restart", True, (8, 0, 36))
     startRect = startButton.get_rect(topleft=(650, 250))
 
     quitButton = py.transform.scale(py.image.load("sprites//GUI//button.png").convert_alpha(), (525, 256))
@@ -53,4 +53,3 @@ def death():
         
 
         py.display.flip()
-
