@@ -13,6 +13,7 @@ def main_game():
 
     run = menu()
 
+
     if run:
         screen = py.display.set_mode((size[0] * 128, size[1] * 128))
         player_bar = Phealth()
