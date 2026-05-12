@@ -29,9 +29,10 @@ class MPhealth():
         self.y = float(mLocation[1] * 128) 
 
     def draw(self, screen):
-        newImage = py.transform.scale(self.sprite, (200, 400))
-        up = self.y + 28
-        newRect = newImage.get_rect(topleft=(self.x,up))
+        newImage = py.transform.scale(self.sprite, (100, 200))
+        up = self.y + -34
+        right = self.x +15
+        newRect = newImage.get_rect(topleft=(right,up))
         screen.blit(newImage, newRect)
 
 
@@ -44,10 +45,13 @@ class MPRbar():
     def draw(self, screen, mHealth):
         location = ()
         if mHealth < 0:mpHealth = 0
-        newImage = py.transform.scale(self.image, (mHealth * 2, 40))
+        yep = (mHealth, 20)
         self.image.fill((255, 0, 0))
-        up = self.y + 28
-        newRect = newImage.get_rect(topleft=(self.x,up))
+        newImage = py.transform.scale(self.image, yep)
+        
+        up = self.y + 18
+        right = self.x +15
+        newRect = newImage.get_rect(topleft=(right,up))
         screen.blit(newImage, newRect)
 
 

@@ -24,7 +24,7 @@ def main_game():
         tilemap = Tilemap(size, tiles)
         player = Player()
 
-        monsters = [Monster("sprites/Drpplet/Dropplet.png", (3, 3), MWeapon("Generic Ah Weapon", 5, "bishop", 1),25,"sprites/Player Attacks/fireball_01.png"), Monster("sprites/Drpplet/Dropplet.png", (6, 6), MWeapon("Generic Ah Weapon", 5, "bishop", 1),25,"sprites/Player Attacks/fireball_01.png")]
+        monsters = [Monster("sprites/Final_boss/Screenshot 2026-05-06 103850-20260506-105054 (1).piskel", (3, 3), MWeapon("Generic Ah Weapon", 5, "queen", 1),25,"sprites/Player Attacks/fireball_01.png")]
         running = True
         
         attackSquares = []
