@@ -3,7 +3,7 @@ from paxtons_helpers import Player, Weapon
 import pandas as pd
 
 
-#function to save the current level, this needs to take in the players HEALTH, WEAPON, SPEED, LEVEL, and then you will ned to insert a save file (either 0,1,or 2) Paxton will implement the menu functionality of this.
+#function to save the current level, this needs to take in the players HEALTH, WEAPON, SPEED, LEVEL, and then you will ned to insert a save file (either 1,2,or 3) Paxton will implement the menu functionality of this.
 def saveCurrentLevel(health, weapon, speed, level, save_file):
     save_file -= 1
     try:
@@ -20,6 +20,7 @@ def saveCurrentLevel(health, weapon, speed, level, save_file):
 
 
 #this allows you to load, it will return 1 of two things, either a string "fail", in which case this save file has no usable data on it, OR it will return the player object, and the level they are on.
+#save file NEEDS TO BE 1,2, or 3
 def loadCurrentLevel(save_file):
     save_file -= 1
     try:
@@ -49,8 +50,10 @@ def loadCurrentLevel(save_file):
     else:
         print("File loaded successfully")
         #return the object for packston to use
+        #index 0 is the player object, index 1 is the level
         return (Player(weapon=Weapon(weapon_name, int(weapon_damage), weapon_type, int(weapon_range)), health=int(health), speed=int(speed)), level)
-    
+
+#save file needs to be a 1,2 or 3
 def deleteSaveFile(save_file):
     save_file -= 1
     try:
