@@ -4,7 +4,7 @@ from paxtons_helpers import Player, Tile, Tilemap, get_tile_mouse_pos, Projectil
 from main_menu import menu
 from helpers import is_adjacent
 from death_screen import death
-from health_bars import Phealth, PRbar
+from health_bars import Phealth, PRbar, MPhealth, MPRbar
 
 def main_game():
     py.init()
@@ -30,6 +30,7 @@ def main_game():
         player = Player()
 
         running = True
+        
         attackSquares = []
         moveSquares = []
         active_projectiles = []  # fix-ed list to hold live projectiles so they can be drawn 
@@ -39,12 +40,17 @@ def main_game():
         running = False
 
     while running:
+        
         screen.fill((0, 0, 255))
         clock.tick(60)
 
         tilemap.draw(screen)
         player.place(screen)
-     
+        for i in monsters:
+            monster_bar = MPhealth(i.location)
+            monster_red_bar = MPRbar(i.health,i.location)
+            monster_red_bar.draw(screen, i.health)
+            monster_bar.draw(screen)
         Player_red_bar.draw(screen, player.health)
         player_bar.draw(screen)
 

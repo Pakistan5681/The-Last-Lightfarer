@@ -117,7 +117,7 @@ class Monster:
         self.rect.topleft = ((self.location[0]) * 128, (self.location[1]) * 128)
         outSprite = py.transform.scale(self.sprite, (128, 128))
         screen.blit(outSprite, self.rect.topleft)
-
+    
     def move(self, playerpos, screenSize, occupied=[]):  # fix-ed accept occupied list
         squares = self.weapon.get_attack_squares(self.location, occupied, screenSize)  # fix-ed pass occupied + screenSize
         if self.weapon.type == "bishop":

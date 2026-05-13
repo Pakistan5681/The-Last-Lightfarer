@@ -22,3 +22,36 @@ class PRbar():
 
 
 
+class MPhealth():
+    def __init__(self,mLocation):
+        self.sprite = py.image.load("sprites//GUI//health_bar.png").convert_alpha()
+        self.x = float(mLocation[0] * 128)
+        self.y = float(mLocation[1] * 128) 
+
+    def draw(self, screen):
+        newImage = py.transform.scale(self.sprite, (100, 200))
+        up = self.y + -34
+        right = self.x +15
+        newRect = newImage.get_rect(topleft=(right,up))
+        screen.blit(newImage, newRect)
+
+
+class MPRbar():
+    def __init__(self, player_max,mLocation):
+        self.image = py.Surface((player_max * 2, 40))
+        self.x = float(mLocation[0] * 128)
+        self.y = float(mLocation[1] * 128)   
+
+    def draw(self, screen, mHealth):
+        location = ()
+        if mHealth < 0:mpHealth = 0
+        yep = (mHealth, 20)
+        self.image.fill((255, 0, 0))
+        newImage = py.transform.scale(self.image, yep)
+        
+        up = self.y + 18
+        right = self.x +15
+        newRect = newImage.get_rect(topleft=(right,up))
+        screen.blit(newImage, newRect)
+
+
