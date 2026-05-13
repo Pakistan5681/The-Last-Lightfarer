@@ -1,9 +1,67 @@
 #mw CP_2 saving and loading
-
+from paxtons_helpers import Player, Weapon
 import pandas as pd
 
 
+#function to save the current level, this needs to take in the players HEALTH, WEAPON, SPEED, LEVEL, and then you will ned to insert a save file (either 0,1,or 2) Paxton will implement the menu functionality of this.
+def saveCurrentLevel(health, weapon, speed, level, save_file):
+    save_file -= 1
+    try:
+        #read the csv
+        df = pd.read_csv("michael/saved_character.csv")
+        #get the specific row, and then change it!
+        df.loc[save_file] = [level,health, weapon.name, weapon.damage, weapon.type, weapon.range, speed]
+        #saving!
+        df.to_csv("michael/saved_character.csv",index = False)
+    except:
+        print("Error saving file")
+    else:
+        print("File saved successfully")
 
-def saveCurrentLevel(health, weapon, speed, level):
-    df = pd.DataFrame(sendable_data = {"Level":str(level), "Health":str(health), "WeaponName":weapon.name, "WeaponDamage" : str(weapon.dmg), "WeaponRange": weapon.range, "Speed": speed})
-    df.to_csv("michael/saved_character.csv", mode = 'a', index = False, header = False)
+
+#this allows you to load, it will return 1 of two things, either a string "fail", in which case this save file has no usable data on it, OR it will return the player object, and the level they are on.
+def loadCurrentLevel(save_file):
+    save_file -= 1
+    try:
+        #read csv
+        df = pd.read_csv("michael/saved_character.csv")
+        #get level
+        level = df.loc[save_file, "Level"]
+        #check if level 0, it is a placeholder save file.
+        if level == 0:
+            print("this save file is empty")
+            #in the case of an empty file
+            return "fail"
+        #get health
+        health = df.loc[save_file, "Health"]
+        #get weapon name
+        weapon_name = df.loc[save_file, "WeaponName"]
+        #get weapon damage
+        weapon_damage = df.loc[save_file, "WeaponDamage"]
+        #get wewapon type
+        weapon_type = df.loc[save_file, "WeaponType"]
+        #get weapon range
+        weapon_range = df.loc[save_file, "WeaponRange"]
+        #get player speed
+        speed = df.loc[save_file, "Speed"]
+    except:
+        print("Error loading file")
+    else:
+        print("File loaded successfully")
+        #return the object for packston to use
+        return (Player(weapon=Weapon(weapon_name, int(weapon_damage), weapon_type, int(weapon_range)), health=int(health), speed=int(speed)), level)
+    
+def deleteSaveFile(save_file):
+    save_file -= 1
+    try:
+        #read the csv
+        df = pd.read_csv("michael/saved_character.csv")
+        #change the row to be the default values, 0 makes the code fail when trying to load.
+        df.loc[save_file] = [0,100,"sword",1,"sword",1,10]
+        #saving!
+        df.to_csv("michael/saved_character.csv",index = False)
+    except:
+        print("Error deleting file")
+    else:
+        print("File deleted successfully")
+

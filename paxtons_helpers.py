@@ -251,13 +251,13 @@ class DisplaySprite:
         screen.blit(outSprite, self.rect.topleft)
 
 class Player:
-    def __init__(self):
+    def __init__(self, weapon=Weapon("Lantern", 50, "blitzer", 1), health=100, speed=5):
         self.location = (7, 5)
         self.sprite = py.image.load("sprites//MCfront//Idle.png").convert_alpha()
         self.rect = self.sprite.get_rect()
-        self.health = 100
-        self.weapon = Weapon("Lantern", 50, "blitzer", 1)
-        self.speed = 5
+        self.health = health
+        self.weapon = weapon
+        self.speed = speed
 
     def place(self, screen):
         self.rect.topleft = ((self.location[0]) * 128, (self.location[1]) * 128)
