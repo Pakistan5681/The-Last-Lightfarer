@@ -90,23 +90,20 @@ class MWeapon:
                 if in_bounds(enemeypos[0], enemeypos[1] - i) and (enemeypos[0], enemeypos[1] - i) not in occupied: squares.append((enemeypos[0], enemeypos[1] - i))      # fix-ed bounds
                 if in_bounds(enemeypos[0] + i, enemeypos[1]) and (enemeypos[0] + i, enemeypos[1]) not in occupied: squares.append((enemeypos[0] + i, enemeypos[1]))      # fix-ed bounds
                 if in_bounds(enemeypos[0] - i, enemeypos[1]) and (enemeypos[0] - i, enemeypos[1]) not in occupied: squares.append((enemeypos[0] - i, enemeypos[1]))      # fix-ed bounds
-            for i in range(1, self.range + 1):  # fix-ed start at 1 to skip own tile
+            for i in range(1, self.range + 1):
                 if in_bounds(enemeypos[0] + i, enemeypos[1] + i) and (enemeypos[0] + i, enemeypos[1] + i) not in occupied: squares.append((enemeypos[0] + i, enemeypos[1] + i))  # fix-ed bounds
                 if in_bounds(enemeypos[0] - i, enemeypos[1] - i) and (enemeypos[0] - i, enemeypos[1] - i) not in occupied: squares.append((enemeypos[0] - i, enemeypos[1] - i))  # fix-ed bounds
                 if in_bounds(enemeypos[0] + i, enemeypos[1] - i) and (enemeypos[0] + i, enemeypos[1] - i) not in occupied: squares.append((enemeypos[0] + i, enemeypos[1] - i))  # fix-ed bounds
                 if in_bounds(enemeypos[0] - i, enemeypos[1] + i) and (enemeypos[0] - i, enemeypos[1] + i) not in occupied: squares.append((enemeypos[0] - i, enemeypos[1] + i))  # fix-ed bounds
-            for x in range(enemeypos[0] - self.range, enemeypos[0] + self.range + 1):  # fix-ed +1 so range is inclusive
-                for y in range(enemeypos[1] - self.range, enemeypos[1] + self.range + 1):  # fix-ed +1 so range is inclusive
-                    if (x, y) != enemeypos and (x, y) not in occupied and in_bounds(x, y):
-                        squares.append((x, y))
+
         return squares 
 
 class Monster:
-    def __init__(self, spriteImage, location, weapon, damage=5, projectile_sprite="sprites/sylf/sylphwing-spell.png"):
+    def __init__(self, spriteImage, health, location, weapon, damage=5, projectile_sprite="sprites/sylf/sylphwing-spell.png"):
         self.location = location
         self.sprite = py.image.load(spriteImage).convert_alpha()
         self.rect = self.sprite.get_rect()
-        self.health = 100
+        self.health = health
         self.weapon = weapon
         self.damage = damage
         self.projectile_sprite = projectile_sprite
@@ -117,7 +114,7 @@ class Monster:
         self.rect.topleft = ((self.location[0]) * 128, (self.location[1]) * 128)
         outSprite = py.transform.scale(self.sprite, (128, 128))
         screen.blit(outSprite, self.rect.topleft)
-
+    
     def move(self, playerpos, screenSize, occupied=[]):  # fix-ed accept occupied list
         squares = self.weapon.get_attack_squares(self.location, occupied, screenSize)  # fix-ed pass occupied + screenSize
         if self.weapon.type == "bishop":
@@ -197,7 +194,7 @@ class Tilemap:
         for t in self.tiles: t.place(screen)
 
 class Level:
-    def __init__(self, monsters, tilemap):
+    def __init__(self, tilemap, monsters):
         self.tilemap = tilemap
         self.monsters = monsters
 
@@ -263,7 +260,7 @@ class Player:
         self.sprite = py.image.load("sprites//MCfront//Idle.png").convert_alpha()
         self.rect = self.sprite.get_rect()
         self.health = 100
-        self.weapon = Weapon("Lantern", 50, "assassin", 2)
+        self.weapon = Weapon("Lantern", 50, "blitzer", 2)
         self.speed = 5
 
     def place(self, screen):
@@ -292,15 +289,7 @@ class Player:
                 if (x, y) != self.location and x >= 0 and y >= 0 and (not (x, y) in monsters) and not self.getIsWall((x, y), tiles): squares.append(DisplaySprite("sprites//Indicators//move_indicator.png", (x, y)))
 
         return squares
-
-class Everything:
-    def __init__(self, player, levelIndex, monsters):
-        self.player = player
-        self.levelIndex = levelIndex
-        self.monsters = monsters
-
     
-
 def proj_transition(activeProjectiles, screen, player, monsters, tilemap):
     while activeProjectiles:
         screen.fill((0, 0, 255))
@@ -314,8 +303,6 @@ def proj_transition(activeProjectiles, screen, player, monsters, tilemap):
         for i in activeProjectiles:
             i.draw(screen, player)
             if not i.alive: activeProjectiles.remove(i)
-
-        
 
         py.display.flip()
 
