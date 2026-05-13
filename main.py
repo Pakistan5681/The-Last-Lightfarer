@@ -11,7 +11,9 @@ def main_game():
     
     size = (10, 10)
 
-    run = menu()
+    run = True
+    runRaw = menu()
+    if runRaw == False: run = False
 
     level = 0 
 
