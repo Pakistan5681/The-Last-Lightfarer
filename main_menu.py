@@ -49,11 +49,12 @@ def menu():
             colorB += 0.05
             colorR += 0.05
 
+        clicked = False
         for event in py.event.get():
             if event.type == py.QUIT:
                 running = False
-
-        mouse_buttons = py.mouse.get_pressed()
+            elif event == py.MOUSEBUTTONDOWN and event.button == 1:
+                clicked = True
 
         startTint = startButton.copy()
         quitTint = quitButton.copy()
@@ -61,13 +62,13 @@ def menu():
         if startRect.collidepoint(mousepos):
             startTint.fill((200, 200, 200), special_flags=py.BLEND_RGBA_MULT)
 
-            if mouse_buttons[0]:
+            if clicked:
                 return True
             
         if quitRect.collidepoint(mousepos):
             quitTint.fill((200, 200, 200), special_flags=py.BLEND_RGBA_MULT)
 
-            if mouse_buttons[0]:
+            if clicked:
                 return False   
         
         screen.blit(playerImage, playerRect)
