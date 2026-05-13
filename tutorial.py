@@ -131,7 +131,6 @@ def tutorial():
     attackSquares = player.attack((10, 10), level)
     spawn = choice(attackSquares).location
     new = Monster("sprites//flame hop//flame hopper v1-1.png.png", 50, spawn, MWeapon("Does it matter?", 10, "pawn", 1), 10, "sprites//Player Attacks//fireball_01.png")
-    new.health = 50
     monsters = [new] 
     active_projectiles = []
 
