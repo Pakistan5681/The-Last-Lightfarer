@@ -194,7 +194,7 @@ class Tilemap:
         for t in self.tiles: t.place(screen)
 
 class Level:
-    def __init__(self, monsters, tilemap):
+    def __init__(self, tilemap, monsters):
         self.tilemap = tilemap
         self.monsters = monsters
 
@@ -289,15 +289,7 @@ class Player:
                 if (x, y) != self.location and x >= 0 and y >= 0 and (not (x, y) in monsters) and not self.getIsWall((x, y), tiles): squares.append(DisplaySprite("sprites//Indicators//move_indicator.png", (x, y)))
 
         return squares
-
-class Everything:
-    def __init__(self, player, levelIndex, monsters):
-        self.player = player
-        self.levelIndex = levelIndex
-        self.monsters = monsters
-
     
-
 def proj_transition(activeProjectiles, screen, player, monsters, tilemap):
     while activeProjectiles:
         screen.fill((0, 0, 255))
@@ -311,8 +303,6 @@ def proj_transition(activeProjectiles, screen, player, monsters, tilemap):
         for i in activeProjectiles:
             i.draw(screen, player)
             if not i.alive: activeProjectiles.remove(i)
-
-        
 
         py.display.flip()
 
