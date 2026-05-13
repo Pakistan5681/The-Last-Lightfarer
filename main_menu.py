@@ -49,8 +49,6 @@ def menu():
             colorB += 0.05
             colorR += 0.05
 
-
-
         for event in py.event.get():
             if event.type == py.QUIT:
                 running = False
