@@ -24,7 +24,7 @@ def main_game():
         tilemap = Tilemap(size, tiles)
         player = Player()
 
-        monsters = [Monster("sprites/Final_boss/Screenshot 2026-05-06 103850-20260506-105054 (1).piskel", (3, 3), MWeapon("Generic Ah Weapon", 5, "queen", 1),25,"sprites/Player Attacks/fireball_01.png")]
+        monsters = [Monster("sprites\Frost Strider/frost strider-completed, no vfx-1.png.png",100, (3, 3), MWeapon("Generic Ah Weapon", 5, "rook", 2),25,"sprites/Player Attacks/fireball_01.png"),Monster("sprites/flame hop/flame hopper v1-1.png.png",100, (3, 4), MWeapon("Generic Ah Weapon", 5, "knight", 2),25,"sprites/Player Attacks/fireball_01.png"),Monster("sprites\sylf\sylphwing-right-facing.png.png",100, (4, 3), MWeapon("Generic Ah Weapon", 5, "bishop", 2),25,"sprites/Player Attacks/fireball_01.png")]
         running = True
         
         attackSquares = []
@@ -78,8 +78,7 @@ def main_game():
                     proj_transition(active_projectiles, screen, player, monsters, tilemap)
                     player.health -= i.damage
                     if player.health <= 0:
-                        running = False
-                        quit()
+                        return death()
                 if i.fight == True:
                     proj_transition(active_projectiles, screen, player, monsters, tilemap)
                     i.fight = False
