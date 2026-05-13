@@ -90,23 +90,20 @@ class MWeapon:
                 if in_bounds(enemeypos[0], enemeypos[1] - i) and (enemeypos[0], enemeypos[1] - i) not in occupied: squares.append((enemeypos[0], enemeypos[1] - i))      # fix-ed bounds
                 if in_bounds(enemeypos[0] + i, enemeypos[1]) and (enemeypos[0] + i, enemeypos[1]) not in occupied: squares.append((enemeypos[0] + i, enemeypos[1]))      # fix-ed bounds
                 if in_bounds(enemeypos[0] - i, enemeypos[1]) and (enemeypos[0] - i, enemeypos[1]) not in occupied: squares.append((enemeypos[0] - i, enemeypos[1]))      # fix-ed bounds
-            for i in range(1, self.range + 1):  # fix-ed start at 1 to skip own tile
+            for i in range(1, self.range + 1):
                 if in_bounds(enemeypos[0] + i, enemeypos[1] + i) and (enemeypos[0] + i, enemeypos[1] + i) not in occupied: squares.append((enemeypos[0] + i, enemeypos[1] + i))  # fix-ed bounds
                 if in_bounds(enemeypos[0] - i, enemeypos[1] - i) and (enemeypos[0] - i, enemeypos[1] - i) not in occupied: squares.append((enemeypos[0] - i, enemeypos[1] - i))  # fix-ed bounds
                 if in_bounds(enemeypos[0] + i, enemeypos[1] - i) and (enemeypos[0] + i, enemeypos[1] - i) not in occupied: squares.append((enemeypos[0] + i, enemeypos[1] - i))  # fix-ed bounds
                 if in_bounds(enemeypos[0] - i, enemeypos[1] + i) and (enemeypos[0] - i, enemeypos[1] + i) not in occupied: squares.append((enemeypos[0] - i, enemeypos[1] + i))  # fix-ed bounds
-            for x in range(enemeypos[0] - self.range, enemeypos[0] + self.range + 1):  # fix-ed +1 so range is inclusive
-                for y in range(enemeypos[1] - self.range, enemeypos[1] + self.range + 1):  # fix-ed +1 so range is inclusive
-                    if (x, y) != enemeypos and (x, y) not in occupied and in_bounds(x, y):
-                        squares.append((x, y))
+
         return squares 
 
 class Monster:
-    def __init__(self, spriteImage, location, weapon, damage=5, projectile_sprite="sprites/sylf/sylphwing-spell.png"):
+    def __init__(self, spriteImage, health, location, weapon, damage=5, projectile_sprite="sprites/sylf/sylphwing-spell.png"):
         self.location = location
         self.sprite = py.image.load(spriteImage).convert_alpha()
         self.rect = self.sprite.get_rect()
-        self.health = 100
+        self.health = health
         self.weapon = weapon
         self.damage = damage
         self.projectile_sprite = projectile_sprite
@@ -263,7 +260,7 @@ class Player:
         self.sprite = py.image.load("sprites//MCfront//Idle.png").convert_alpha()
         self.rect = self.sprite.get_rect()
         self.health = 100
-        self.weapon = Weapon("Lantern", 50, "assassin", 2)
+        self.weapon = Weapon("Lantern", 50, "blitzer", 2)
         self.speed = 5
 
     def place(self, screen):
