@@ -1,5 +1,4 @@
 # The Last Lightfarer
-[Starting zone](finance_program/documents/Screenshot2026-04-09101005.png)
 
 ***
 This is a fun rpg enemy wave game where you play as a man adventuring to destroy the evil witch with his lantern
