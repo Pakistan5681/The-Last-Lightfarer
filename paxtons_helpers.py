@@ -262,7 +262,7 @@ class Player:
         self.sprite = py.image.load("sprites//MCfront//Idle.png").convert_alpha()
         self.rect = self.sprite.get_rect()
         self.health = 100
-        self.weapon = Weapon("Lantern", 50, "blitzer", 2)
+        self.weapon = Weapon("Lantern", 25, "marksman", 1)
         self.speed = 5
 
     def place(self, screen):
