@@ -5,7 +5,7 @@ This is a fun rpg enemy wave game where you play as a man adventuring to destroy
 
 ## How to use The Last Lightfarer
 ***
-1. run in Vs code
+1. go to main and press play
 2. tutorial should pop up. the tutorial is separate to the game, nothing done there will effect the game
 3. orange circle is for moving
 4. red is attack
