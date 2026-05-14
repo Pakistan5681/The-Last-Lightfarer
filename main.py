@@ -1,6 +1,7 @@
 import pygame as py
 import time
-from paxtons_helpers import Player, Tile, Tilemap, get_tile_mouse_pos, Projectile, MWeapon, Monster, proj_transition, Level
+from paxtons_helpers import Player, Tile, Tilemap, get_tile_mouse_pos, Projectile, MWeapon, Monster, proj_transition, Level, weapon_popup, Weapon
+from tutorial import tutorial
 from main_menu import menu
 from helpers import is_adjacent
 from death_screen import death
@@ -15,7 +16,7 @@ def main_game():
     runRaw = menu()
     if runRaw == False: run = False
 
-    level = 0
+    level = 1
 
     levels = {
         1: Level([Tile((4, 0), 'sprites//Tiles//other//wotar.png', True), Tile((4, 1), 'sprites//Tiles//other//wotar.png', True), Tile((4, 2), 'sprites//Tiles//other//wotar.png', True), Tile((4, 3), 'sprites//Tiles//other//wotar.png', True), Tile((4, 4), 'sprites//Tiles//other//wotar.png', True), Tile((4, 5), 'sprites//Tiles//other//wotar.png', True), Tile((4, 6), 'sprites//Tiles//other//wotar.png', True), Tile((5, 6), 'sprites//Tiles//other//wotar.png', True), Tile((5, 7), 'sprites//Tiles//other//wotar.png', True), Tile((5, 8), 'sprites//Tiles//other//wotar.png', True), Tile((5, 9), 'sprites//Tiles//other//wotar.png', True), Tile((4, 9), 'sprites//Tiles//stone//watercobble.png', False), Tile((4, 8), 'sprites//Tiles//stone//watercobble.png', False), Tile((4, 7), 'sprites//Tiles//stone//watercobble.png', False), Tile((3, 7), 'sprites//Tiles//stone//watercobble.png', False), Tile((3, 6), 'sprites//Tiles//stone//watercobble.png', False), Tile((3, 5), 'sprites//Tiles//stone//watercobble.png', False), Tile((3, 4), 'sprites//Tiles//stone//watercobble.png', False), Tile((3, 3), 'sprites//Tiles//stone//watercobble.png', False), Tile((3, 2), 'sprites//Tiles//stone//watercobble.png', False), Tile((3, 1), 'sprites//Tiles//stone//watercobble.png', False), Tile((3, 0), 'sprites//Tiles//stone//watercobble.png', False), Tile((5, 0), 'sprites//Tiles//stone//watercobble.png', False), Tile((5, 1), 'sprites//Tiles//stone//watercobble.png', False), Tile((5, 2), 'sprites//Tiles//stone//watercobble.png', False), Tile((5, 3), 'sprites//Tiles//stone//watercobble.png', False), Tile((5, 4), 'sprites//Tiles//stone//watercobble.png', False), Tile((5, 5), 'sprites//Tiles//stone//watercobble.png', False), Tile((6, 5), 'sprites//Tiles//stone//watercobble.png', False), Tile((6, 6), 'sprites//Tiles//stone//watercobble.png', False), Tile((6, 7), 'sprites//Tiles//stone//watercobble.png', False), Tile((6, 8), 'sprites//Tiles//stone//watercobble.png', False), Tile((6, 9), 'sprites//Tiles//stone//watercobble.png', False), Tile((1, 0), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((1, 1), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((2, 2), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((2, 3), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((2, 5), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((1, 5), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((1, 6), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((1, 7), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((1, 8), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((1, 9), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((2, 9), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((2, 8), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((0, 9), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((0, 8), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((0, 7), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((0, 6), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((0, 0), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((0, 1), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((0, 2), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((0, 3), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((0, 4), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((1, 3), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((1, 2), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((1, 4), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((0, 5), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((6, 3), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((7, 0), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((8, 0), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((9, 0), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((9, 1), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((9, 4), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((9, 5), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((9, 6), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((9, 7), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((9, 8), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((9, 9), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((8, 9), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((7, 5), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((7, 4), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((7, 3), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((7, 2), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((7, 1), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((8, 1), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((8, 2), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((8, 3), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((8, 4), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((9, 2), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((9, 3), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((8, 5), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((8, 6), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((8, 7), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((8, 8), 'sprites//Tiles//dirt//jungle_grass.png', False), Tile((6, 4), 'sprites//Tiles//stone//cobble.png', False), Tile((2, 4), 'sprites//Tiles//stone//cobble.png', False), Tile((3, 8), 'sprites//Tiles//stone//cobble.png', False), Tile((2, 1), 'sprites//Tiles//stone//cobble.png', False), Tile((6, 0), 'sprites//Tiles//stone//cobble.png', False), Tile((7, 9), 'sprites//Tiles//stone//cobble.png', False), Tile((7, 7), 'sprites//Tiles//stone//cobble.png', False), Tile((2, 6), 'sprites//Tiles//stone//cobble.png', False), Tile((2, 7), 'sprites//Tiles//dirt//dirt_ground_5.png', False), Tile((2, 0), 'sprites//Tiles//dirt//dirt_ground_4.png', False), Tile((6, 2), 'sprites//Tiles//dirt//dirt_ground_4.png', False), Tile((7, 8), 'sprites//Tiles//dirt//dirt_ground_4.png', False), Tile((3, 9), 'sprites//Tiles//dirt//dirt_ground_4.png', False), Tile((7, 6), 'sprites//Tiles//dirt//dirt_ground_2.png', False), Tile((6, 1), 'sprites//Tiles//dirt//dirt_ground_2.png', False)], [Monster("sprites/Final_Bosss/Screenshot 2026-05-06 103850-1.png.png",100, (6, 6), MWeapon("Generic Ah Weapon", 5, "queen", 5),0,"sprites/Player Attacks/fireball_01.png")]),
@@ -43,7 +44,8 @@ def main_game():
 
         tilemap = Tilemap(size, tiles)
         player = Player()
-
+        player.weapon = Weapon("Devlight", 9999, "warrior", 10) # Always just a delete away
+        player.weapon = player.weapon = Weapon("Brightlance", 25, "marksman", 1)
    
         running = True
        
@@ -52,11 +54,11 @@ def main_game():
         active_projectiles = []  # fix-ed list to hold live projectiles so they can be drawn
 
         currentTurn = "playerMove" # A variable that decides what actions can take place (i.e. playerAttack means it is the players attack phase)
+        tutorial()
     else:
         running = False
 
     while running:
-       
         screen.fill((0, 0, 255))
         clock.tick(60)
 
@@ -131,7 +133,8 @@ def main_game():
                                 if i.location == get_tile_mouse_pos():                                    
                                     i.health -= player.weapon.damage
                                     if i.health <= 0:
-                                        monsters.remove(i)                          
+                                        monsters.remove(i)  
+                                        player.health += 25                        
                             currentTurn = "monsterMove"
                             break
                     elif currentTurn == "playerMove":
@@ -145,6 +148,7 @@ def main_game():
                             currentTurn = "playerAttack"
 
         if not monsters:
+            player.weapon = weapon_popup(screen, player.weapon, level, tilemap, player)
             level += 1
             tiles, monsters = levels[level].get_level_data()
             tilemap = Tilemap(size, tiles)

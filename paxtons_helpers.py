@@ -1,6 +1,7 @@
 import pygame as py
-from random import randint, choice
+from random import randint, choice, choices # choices is like choice with weights ig
 import math
+from GUI import Popup, PopupButton
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -306,7 +307,40 @@ def proj_transition(activeProjectiles, screen, player, monsters, tilemap):
 
         py.display.flip()
 
+def create_weapon_name():
+    weaponNames1 = ["Light", "Dark", "Eternity", "Vast", "End", "Void", "Bright"]
+    weaponNames2 = ["bringer", "ender", "crusher", "flame", "singer", "splitter", "lance"]
+    return choice(weaponNames1) + choice(weaponNames2)
 
+def create_random_weapon(levelIndex):
+    name = create_weapon_name()
+    if levelIndex == 1: levelIndex = 0
+    damage = randint(round(20 + (levelIndex / 10)), round(40 + (levelIndex / 10)))
+    wType = choice(["warrior", "marksman", "assassin", "blitzer"])
+    wRange = choices([1, 2, 3], [6, 3, 1])[0]
+    return Weapon(name, damage, wType, wRange)
+
+def weapon_popup(screen,currentWeapon, level, tilemap, player):
+    newWeapon = create_random_weapon(level)
+    popup = Popup(f"""You got the {newWeapon.name} \nDamage: {newWeapon.damage} \nType: {newWeapon.type} \nRange: {newWeapon.range}
+""", (8, 0, 36), [PopupButton("Grab", (315, 775)), PopupButton("Leave", (715, 775))])
+    while True:
+        screen.fill((0, 0, 0))
+        tilemap.draw(screen)
+        player.place(screen)
+        clicking = False
+        for event in py.event.get():
+                if event.type == py.QUIT:
+                    running = False
+                elif event.type == py.MOUSEBUTTONDOWN and event.button == 1:
+                    clicking = True
+        popup.draw(screen, clicking)
+        if popup.buttons[0].clicked:
+            return newWeapon
+        elif popup.buttons[1].clicked:
+            return currentWeapon
+        
+        py.display.flip()
 
 def get_random_tile(category):  
     """
