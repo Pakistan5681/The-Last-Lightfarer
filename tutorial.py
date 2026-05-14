@@ -45,12 +45,12 @@ def tutorial():
     player_bar = Phealth()
     Player_red_bar = PRbar(100)
 
-    popup = Popup("Some good words would go here. Backstory and the like. This part isn't important to the game in any way, shape, or form.", (8, 0, 36), [PopupButton("Next", (515, 775))]) 
+    popup = Popup("Rin, Wake up, they have found you! WAKE UP!", (8, 0, 36), [PopupButton("Next", (515, 775))]) 
 
     running = True
     running = generic_popup(popup, player, tilemap, running)
 
-    popup = Popup("Likely more backstory. 'Youre the last lightfarer and must save the world' typa deal.", (8, 0, 36), [PopupButton("Next", (515, 775))]) 
+    popup = Popup("The Beastly lights of this world have escaped, they are running rampant! You must liberate them!", (8, 0, 36), [PopupButton("Next", (515, 775))]) 
     running = generic_popup(popup, player, tilemap, running)
 
     popup = Popup("You will see orange circles on your screen. They indicate where you can move. You can't move to water or building tiles. Click an orange circle.", (8, 0, 36), [PopupButton("Next", (515, 775))]) 
@@ -250,5 +250,5 @@ def tutorial():
                     return death()
         
     active = True
-    popup = Popup("You did it screen. 'Go and save the world' or something cornballish like that", (8, 0, 36), [PopupButton("Next", (515, 775))]) 
+    popup = Popup("You killed the light, it can't hurt anyone anymore! Go on and keep going!", (8, 0, 36), [PopupButton("Next", (515, 775))]) 
     running = generic_popup(popup, player, tilemap, running)
