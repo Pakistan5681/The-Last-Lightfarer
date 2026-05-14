@@ -14,12 +14,12 @@ This is a fun rpg enemy wave game where you play as a man adventuring to destroy
 ## List of Key Features
 ***
 
--fun rpg adventure
--working weapon generator
--saving and loading the game
--tutorial
--13 hand made levels
--mostly handmade artwork
+- fun rpg adventure
+- working weapon generator
+- saving and loading the game
+- tutorial
+- 13 hand made levels
+- mostly handmade artwork
 
 ### Weapon Classes
 - warrior: attack all squares at low range
