@@ -5,7 +5,7 @@ def win():
     titleFont = py.font.Font("Fonts//Felipa-Regular.ttf", 150)
     buttonFont = py.font.Font("Fonts//Felipa-Regular.ttf", 75)
 
-    mainTextS = titleFont.render("Winner!", True, (0, 0, 0))
+    mainTextS = titleFont.render("You have liberated the light of the world, good job Rin!", True, (0, 0, 0))
 
     startButton = py.transform.scale(py.image.load("sprites//GUI//button.png").convert_alpha(), (525, 256))
     startButtonText = buttonFont.render("Restart", True, (8, 0, 36))
