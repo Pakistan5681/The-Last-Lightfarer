@@ -195,12 +195,13 @@ class Tilemap:
         for t in self.tiles: t.place(screen)
 
 class Level:
-    def __init__(self, tilemap, monsters):
+    def __init__(self, tilemap, monsters, spawn):
         self.tilemap = tilemap
         self.monsters = monsters
+        self.spawn = spawn
 
     def get_level_data(self):
-        return self.tilemap, self.monsters
+        return self.tilemap, self.monsters, self.spawn
 
 class Weapon:
     def __init__(self, name, damage, type, range):

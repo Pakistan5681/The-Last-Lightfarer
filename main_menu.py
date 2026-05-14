@@ -103,9 +103,9 @@ def menu():
                 if clicked:
                     result = loadCurrentLevel(1)
                     if result != "fail":
-                        return result
+                        return result, 1
                     else:
-                        return "new_game"
+                        return "new_game", 1
                 
             if save2rect.collidepoint(mousepos):
                 save2Tint.fill((200, 200, 200), special_flags=py.BLEND_RGBA_MULT)
@@ -113,9 +113,9 @@ def menu():
                 if clicked:
                     result = loadCurrentLevel(2)
                     if result != "fail":
-                        return result
+                        return result, 2
                     else:
-                        return "new_game"
+                        return "new_game", 2
                 
             if save3rect.collidepoint(mousepos):
                 save3Tint.fill((200, 200, 200), special_flags=py.BLEND_RGBA_MULT)
@@ -123,9 +123,9 @@ def menu():
                 if clicked:
                     result = loadCurrentLevel(3)
                     if result != "fail":
-                        return result
+                        return result, 3
                     else:
-                        return "new_game"
+                        return "new_game", 3
                 
             screen.blit(save1Tint, save1Rect)
             screen.blit(save2Tint, save2rect)
