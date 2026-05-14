@@ -27,10 +27,11 @@ This is a fun rpg enemy wave game where you play as a man adventuring to destroy
 - assasin: attack in a X pattern at med range
 - blitzer: attack many random squares at infinite range
 
--Libraries used: csv, pandas, pygame, time, random, 
+
 
 ## Installation Instructions
 ***
+-Libraries used: csv, pandas, pygame, time, random, 
 -Need to download: pandas, pygame
 
 -To download open a terminal and type "pip intall {name of thing you are downloading}
