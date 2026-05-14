@@ -39,9 +39,9 @@ This is a fun rpg enemy wave game where you play as a man adventuring to destroy
 ***
 The programmers who made this code and worked hard on this project are:
 
-Zuzanune
-Michael-maple-waffles
-INTELION11
-Pakistan5681
+- Zuzanune
+- Michael-maple-waffles
+- INTELION11
+- Pakistan5681
 
 ## ENJOY YOUR GAMING
