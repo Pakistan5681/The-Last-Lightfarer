@@ -25,7 +25,7 @@ def loadCurrentLevel(save_file):
     save_file -= 1
     try:
         #read csv
-        df = pd.read_csv("michael/saved_character.csv")
+        df = pd.read_csv("michael\saved_character.csv")
         #get level
         level = df.loc[save_file, "Level"]
         #check if level 0, it is a placeholder save file.
@@ -51,7 +51,7 @@ def loadCurrentLevel(save_file):
         print("File loaded successfully")
         #return the object for packston to use
         #index 0 is the player object, index 1 is the level
-        return (Player(weapon=Weapon(weapon_name, int(weapon_damage), weapon_type, int(weapon_range)), health=int(health), speed=int(speed)), level)
+        return (Player(weapon=Weapon(name=weapon_name, damage=int(weapon_damage), type=weapon_type, range=int(weapon_range)), health=int(health), speed=int(speed)), level)
 
 #save file needs to be a 1,2 or 3
 def deleteSaveFile(save_file):
