@@ -1,4 +1,5 @@
 import pygame as py
+from michael.saving_loading import loadCurrentLevel
 
 py.init()
 
@@ -100,19 +101,31 @@ def menu():
                 save1Tint.fill((200, 200, 200), special_flags=py.BLEND_RGBA_MULT)
 
                 if clicked:
-                    return 1
+                    result = loadCurrentLevel(1)
+                    if result != "fail":
+                        return result
+                    else:
+                        return "new_game"
                 
             if save2rect.collidepoint(mousepos):
                 save2Tint.fill((200, 200, 200), special_flags=py.BLEND_RGBA_MULT)
 
                 if clicked:
-                    return 2
+                    result = loadCurrentLevel(2)
+                    if result != "fail":
+                        return result
+                    else:
+                        return "new_game"
                 
             if save3rect.collidepoint(mousepos):
                 save3Tint.fill((200, 200, 200), special_flags=py.BLEND_RGBA_MULT)
 
                 if clicked:
-                    return 3
+                    result = loadCurrentLevel(3)
+                    if result != "fail":
+                        return result
+                    else:
+                        return "new_game"
                 
             screen.blit(save1Tint, save1Rect)
             screen.blit(save2Tint, save2rect)
