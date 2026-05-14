@@ -2,10 +2,13 @@ import paxtons_helpers as ph
 import pygame as py
 import json
 
+
 py.init()
+
 
 screen = py.display.set_mode((1280, 1280))
 clock = py.time.Clock()
+
 
 drawTiles = {
     1: "sprites//Tiles//dirt//dirt_ground_1.png",
@@ -24,22 +27,31 @@ drawTiles = {
     14: "sprites\Tiles\Logs\Right_log.png",
     15: "sprites\Tiles\Liliy_Pad\LeftPad.png",
     16: "sprites\Tiles\Liliy_Pad\Right Pad.png",
-    17: "sprites\Tiles\Logs\small_log.png"
+    17: "sprites\Tiles\Logs\small_Log.png",
+    18: "sprites\Tiles\dirt\Sand.gif",
+    19: "sprites\Tiles/new_tiles\lavar-1.png.png",
+    20: "sprites\Tiles/new_tiles\magmar-1.png.png",
+    21:"sprites\Tiles/new_tiles\mudr-1.png.png",
 }
+
 
 wallTiles ={
     "place" : "sprites//Tiles//editor//Add Wall.png",
     "delete" : "sprites//Tiles//editor//Add Wall.png"
 }
 
+
 tiles = []
 walls = []
+
 
 for x in range(10):
     for y in range(10):
         tiles.append(ph.Tile((x, y), "sprites//Tiles//dirt//dirt_ground_1.png", False))
 
-max = 17
+
+max = 21
+
 
 scrollPause = False
 scrollDelay = 10
@@ -47,7 +59,9 @@ scrollClock = 0
 current = 1
 wallCurrent = "place"
 
+
 mode = "tiles"
+
 
 def export(tiles, walls):
     with open("tme_out.json", "w") as file:
@@ -56,15 +70,19 @@ def export(tiles, walls):
             outString += f"Tile(({i.location[0]}, {i.location[1]}), '{i.spritePath}', {getIsWall((i.location[0], i.location[1]), walls)}), "
         outString += "]"
 
+
         json.dump(outString, file)
 
+
 def getIsWall(pos, walls):
+
 
     for i in walls:
         if i.location == pos:
             return True
-    
+   
     return False
+
 
 while True:
     screen.fill((0, 0, 0))
@@ -73,11 +91,14 @@ while True:
         clock.tick(60)
         mousepos = ph.get_tile_mouse_pos()
 
+
         tilemap = ph.Tilemap((10, 10), tiles)
         tilemap.draw(screen)
         tile = drawTiles[current]
 
+
         ph.Tile(mousepos, tile, False).place(screen)
+
 
         for event in py.event.get():
             if event.type == py.MOUSEBUTTONDOWN:
@@ -94,7 +115,9 @@ while True:
                 elif event.key == py.K_w:
                     mode = "walls"
 
+
         mousebuttons = py.mouse.get_pressed()
+
 
         if mousebuttons[0]:
             for t in tiles:
@@ -103,17 +126,20 @@ while True:
                     tiles.append(ph.Tile(mousepos, tile, False))
                     break
 
+
         if scrollPause:
             scrollClock += 1
             if scrollClock >= scrollDelay:
                 scrollClock = 0
                 scrollPause = False
 
+
         py.display.flip()
     else:
         screen.fill((0, 0, 0))
         clock.tick(60)
         mousepos = ph.get_tile_mouse_pos()
+
 
         tilemap = ph.Tilemap((10, 10), tiles)
         wallsMap = ph.Tilemap((10, 10), walls)
@@ -122,7 +148,9 @@ while True:
         tile = wallTiles[wallCurrent]
         ph.Tile(mousepos, tile, False).place(screen)
 
+
         mousebuttons = py.mouse.get_pressed()
+
 
         if mousebuttons[0]:
             if wallCurrent == "place":
@@ -133,12 +161,13 @@ while True:
                 else:
                     walls.append(ph.Tile(mousepos, tile, False))
 
+
             else:  # delete
                 for t in walls:
                     if t.location == mousepos:
                         walls.remove(t)
                         break
-        
+       
         for event in py.event.get():
             if event.type == py.KEYDOWN:
                 if event.key == py.K_p:
@@ -149,5 +178,7 @@ while True:
                     mode = "tiles"
                 elif event.key == py.K_e:
                     export(tiles, walls)
-        
+       
         py.display.flip()
+
+
