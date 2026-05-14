@@ -18,6 +18,18 @@ def menu():
     quitText = buttonFont.render("Quit", True, (8, 0, 36))
     quitRect = startButton.get_rect(topleft=(700, 500))
 
+    save1 = py.transform.scale(py.image.load("sprites//GUI//button.png").convert_alpha(), (525, 256))
+    save1Text = buttonFont.render("Save 1", True, (8, 0, 36))
+    save1Rect = save1.get_rect(topleft=(700, 250))
+
+    save2= py.transform.scale(py.image.load("sprites//GUI//button.png").convert_alpha(), (525, 256))
+    save2text = buttonFont.render("Save 2", True, (8, 0, 36))
+    save2rect = save2.get_rect(topleft=(700, 500))
+
+    save3= py.transform.scale(py.image.load("sprites//GUI//button.png").convert_alpha(), (525, 256))
+    save3text = buttonFont.render("Save 3", True, (8, 0, 36))
+    save3rect = save3.get_rect(topleft=(700, 750))
+
     playerImage = py.transform.scale(py.image.load("sprites//MCfront//Idle.png").convert_alpha(), (1000, 1000))
     playerRect = playerImage.get_rect(topleft=(-200, 50))
 
@@ -29,6 +41,8 @@ def menu():
 
     clock = 0
     inverted = False
+
+    saveMenu = False
 
     running = True
     while running:
@@ -49,38 +63,67 @@ def menu():
             colorB += 0.05
             colorR += 0.05
 
-
-
+        clicked = False
         for event in py.event.get():
             if event.type == py.QUIT:
                 running = False
+            elif event.type == py.MOUSEBUTTONDOWN and event.button == 1:
+                clicked = True
 
-        mouse_buttons = py.mouse.get_pressed()
+        if not saveMenu:
+            startTint = startButton.copy()
+            quitTint = quitButton.copy()
 
-        startTint = startButton.copy()
-        quitTint = quitButton.copy()
+            if startRect.collidepoint(mousepos):
+                startTint.fill((200, 200, 200), special_flags=py.BLEND_RGBA_MULT)
 
-        if startRect.collidepoint(mousepos):
-            startTint.fill((200, 200, 200), special_flags=py.BLEND_RGBA_MULT)
+                if clicked:
+                    saveMenu = True
 
-            if mouse_buttons[0]:
-                return True
-            
-        if quitRect.collidepoint(mousepos):
-            quitTint.fill((200, 200, 200), special_flags=py.BLEND_RGBA_MULT)
+            if quitRect.collidepoint(mousepos):
+                quitTint.fill((200, 200, 200), special_flags=py.BLEND_RGBA_MULT)
 
-            if mouse_buttons[0]:
-                return False   
-        
+                if clicked:
+                    return False   
+                
+            screen.blit(startTint, startRect)
+            screen.blit(startButtonText, (900, 320))
+    
+            screen.blit(quitTint, quitRect)
+            screen.blit(quitText, (900, 570)) 
+        else:
+            save1Tint = save1.copy()
+            save2Tint = save2.copy()
+            save3Tint = save3.copy()
+
+            if save1Rect.collidepoint(mousepos):
+                save1Tint.fill((200, 200, 200), special_flags=py.BLEND_RGBA_MULT)
+
+                if clicked:
+                    return 1
+                
+            if save2rect.collidepoint(mousepos):
+                save2Tint.fill((200, 200, 200), special_flags=py.BLEND_RGBA_MULT)
+
+                if clicked:
+                    return 2
+                
+            if save3rect.collidepoint(mousepos):
+                save3Tint.fill((200, 200, 200), special_flags=py.BLEND_RGBA_MULT)
+
+                if clicked:
+                    return 3
+                
+            screen.blit(save1Tint, save1Rect)
+            screen.blit(save2Tint, save2rect)
+            screen.blit(save3Tint, save3rect)
+            screen.blit(save1Text, (900, 320))
+            screen.blit(save2text, (900, 570))
+            screen.blit(save3text, (900, 820))
+   
         screen.blit(playerImage, playerRect)
         screen.blit(monsterImage, monsterRect)
 
-        screen.blit(mainTextS, (500, 50))
-
-        screen.blit(startTint, startRect)
-        screen.blit(startButtonText, (900, 320))
-
-        screen.blit(quitTint, quitRect)
-        screen.blit(quitText, (900, 570))    
+        screen.blit(mainTextS, (500, 50))          
 
         py.display.flip()

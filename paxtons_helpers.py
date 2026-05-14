@@ -1,6 +1,7 @@
 import pygame as py
-from random import randint, choice
+from random import randint, choice, choices # choices is like choice with weights ig
 import math
+from GUI import Popup, PopupButton
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------
 #----------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -23,7 +24,6 @@ class Projectile:
         total_distance = math.sqrt(horizontal_distance**2 + vertical_distance**2)
 
         if total_distance <= self.speed:
-            player.health -= self.damage
             self.alive = False
         else:
             self.x += (horizontal_distance / total_distance) * self.speed
@@ -91,23 +91,20 @@ class MWeapon:
                 if in_bounds(enemeypos[0], enemeypos[1] - i) and (enemeypos[0], enemeypos[1] - i) not in occupied: squares.append((enemeypos[0], enemeypos[1] - i))      # fix-ed bounds
                 if in_bounds(enemeypos[0] + i, enemeypos[1]) and (enemeypos[0] + i, enemeypos[1]) not in occupied: squares.append((enemeypos[0] + i, enemeypos[1]))      # fix-ed bounds
                 if in_bounds(enemeypos[0] - i, enemeypos[1]) and (enemeypos[0] - i, enemeypos[1]) not in occupied: squares.append((enemeypos[0] - i, enemeypos[1]))      # fix-ed bounds
-            for i in range(1, self.range + 1):  # fix-ed start at 1 to skip own tile
+            for i in range(1, self.range + 1):
                 if in_bounds(enemeypos[0] + i, enemeypos[1] + i) and (enemeypos[0] + i, enemeypos[1] + i) not in occupied: squares.append((enemeypos[0] + i, enemeypos[1] + i))  # fix-ed bounds
                 if in_bounds(enemeypos[0] - i, enemeypos[1] - i) and (enemeypos[0] - i, enemeypos[1] - i) not in occupied: squares.append((enemeypos[0] - i, enemeypos[1] - i))  # fix-ed bounds
                 if in_bounds(enemeypos[0] + i, enemeypos[1] - i) and (enemeypos[0] + i, enemeypos[1] - i) not in occupied: squares.append((enemeypos[0] + i, enemeypos[1] - i))  # fix-ed bounds
                 if in_bounds(enemeypos[0] - i, enemeypos[1] + i) and (enemeypos[0] - i, enemeypos[1] + i) not in occupied: squares.append((enemeypos[0] - i, enemeypos[1] + i))  # fix-ed bounds
-            for x in range(enemeypos[0] - self.range, enemeypos[0] + self.range + 1):  # fix-ed +1 so range is inclusive
-                for y in range(enemeypos[1] - self.range, enemeypos[1] + self.range + 1):  # fix-ed +1 so range is inclusive
-                    if (x, y) != enemeypos and (x, y) not in occupied and in_bounds(x, y):
-                        squares.append((x, y))
+
         return squares 
 
 class Monster:
-    def __init__(self, spriteImage, location, weapon, damage=5, projectile_sprite="sprites/sylf/sylphwing-spell.png"):
+    def __init__(self, spriteImage, health, location, weapon, damage=5, projectile_sprite="sprites/sylf/sylphwing-spell.png"):
         self.location = location
         self.sprite = py.image.load(spriteImage).convert_alpha()
         self.rect = self.sprite.get_rect()
-        self.health = 100
+        self.health = health
         self.weapon = weapon
         self.damage = damage
         self.projectile_sprite = projectile_sprite
@@ -118,7 +115,7 @@ class Monster:
         self.rect.topleft = ((self.location[0]) * 128, (self.location[1]) * 128)
         outSprite = py.transform.scale(self.sprite, (128, 128))
         screen.blit(outSprite, self.rect.topleft)
-
+    
     def move(self, playerpos, screenSize, occupied=[]):  # fix-ed accept occupied list
         squares = self.weapon.get_attack_squares(self.location, occupied, screenSize)  # fix-ed pass occupied + screenSize
         if self.weapon.type == "bishop":
@@ -197,6 +194,14 @@ class Tilemap:
     def draw(self, screen):
         for t in self.tiles: t.place(screen)
 
+class Level:
+    def __init__(self, tilemap, monsters):
+        self.tilemap = tilemap
+        self.monsters = monsters
+
+    def get_level_data(self):
+        return self.tilemap, self.monsters
+
 class Weapon:
     def __init__(self, name, damage, type, range):
         self.name = name
@@ -255,9 +260,9 @@ class Player:
         self.location = (7, 5)
         self.sprite = py.image.load("sprites//MCfront//Idle.png").convert_alpha()
         self.rect = self.sprite.get_rect()
-        self.health = health
-        self.weapon = weapon
-        self.speed = speed
+        self.health = 100
+        self.weapon = Weapon("Lantern", 50, "blitzer", 2)
+        self.speed = 5
 
     def place(self, screen):
         self.rect.topleft = ((self.location[0]) * 128, (self.location[1]) * 128)
@@ -286,7 +291,6 @@ class Player:
 
         return squares
     
-
 def proj_transition(activeProjectiles, screen, player, monsters, tilemap):
     while activeProjectiles:
         screen.fill((0, 0, 255))
@@ -301,11 +305,42 @@ def proj_transition(activeProjectiles, screen, player, monsters, tilemap):
             i.draw(screen, player)
             if not i.alive: activeProjectiles.remove(i)
 
-        
-
         py.display.flip()
 
+def create_weapon_name():
+    weaponNames1 = ["Light", "Dark", "Eternity", "Vast", "End", "Void", "Bright"]
+    weaponNames2 = ["bringer", "ender", "crusher", "flame", "singer", "splitter", "lance"]
+    return choice(weaponNames1) + choice(weaponNames2)
 
+def create_random_weapon(levelIndex):
+    name = create_weapon_name()
+    if levelIndex == 1: levelIndex = 0
+    damage = randint(round(20 + (levelIndex / 10)), round(40 + (levelIndex / 10)))
+    wType = choice(["warrior", "marksman", "assassin", "blitzer"])
+    wRange = choices([1, 2, 3], [6, 3, 1])[0]
+    return Weapon(name, damage, wType, wRange)
+
+def weapon_popup(screen,currentWeapon, level, tilemap, player):
+    newWeapon = create_random_weapon(level)
+    popup = Popup(f"""You got the {newWeapon.name} \nDamage: {newWeapon.damage} \nType: {newWeapon.type} \nRange: {newWeapon.range}
+""", (8, 0, 36), [PopupButton("Grab", (315, 775)), PopupButton("Leave", (715, 775))])
+    while True:
+        screen.fill((0, 0, 0))
+        tilemap.draw(screen)
+        player.place(screen)
+        clicking = False
+        for event in py.event.get():
+                if event.type == py.QUIT:
+                    running = False
+                elif event.type == py.MOUSEBUTTONDOWN and event.button == 1:
+                    clicking = True
+        popup.draw(screen, clicking)
+        if popup.buttons[0].clicked:
+            return newWeapon
+        elif popup.buttons[1].clicked:
+            return currentWeapon
+        
+        py.display.flip()
 
 def get_random_tile(category):  
     """

@@ -1,22 +1,57 @@
 import pygame as py
 class Phealth():
     def __init__(self):
-        self.sprite = py.image.load("sprites//MCfront//Idle.png").convert_alpha()
-        self.rect = self.sprite.get_rect()
-        self.rect.center = (0,0)
-        self.speed = 5
+        self.sprite = py.image.load("sprites//GUI//health_bar.png").convert_alpha()
+
+    def draw(self, screen):
+        newImage = py.transform.scale(self.sprite, (200, 400))
+        newRect = newImage.get_rect(topleft=(50, -50))
+        screen.blit(newImage, newRect)
 
 
 class PRbar():
-    def __init__(self,player_max,player_current):
-        self.image = py.Surface((50, 50))
-        self.image.fill((0, 255, 0)) 
-        self.rect = self.image.get_rect()
-        self.rect.center = (0,0)
-        new_width = self.rect.width - 10
-        if new_width > 0:
-            new_image = py.transform.scale(self.image, (new_width, self.rect.height))
-            self.rect = new_image.get_rect()
-            self.rect.width = new_width
+    def __init__(self, player_max):
+        self.image = py.Surface((player_max * 2, 40))    
+
+    def draw(self, screen, pHealth):
+        if pHealth < 0: pHealth = 0
+        newImage = py.transform.scale(self.image, (pHealth * 2, 40))
+        self.image.fill((255, 0, 0))
+        newRect = newImage.get_rect(topleft=(50, 50))
+        screen.blit(newImage, newRect)
+
+
+
+class MPhealth():
+    def __init__(self,mLocation):
+        self.sprite = py.image.load("sprites//GUI//health_bar.png").convert_alpha()
+        self.x = float(mLocation[0] * 128)
+        self.y = float(mLocation[1] * 128) 
+
+    def draw(self, screen):
+        newImage = py.transform.scale(self.sprite, (100, 200))
+        up = self.y + -34
+        right = self.x +15
+        newRect = newImage.get_rect(topleft=(right,up))
+        screen.blit(newImage, newRect)
+
+
+class MPRbar():
+    def __init__(self, player_max,mLocation):
+        self.image = py.Surface((player_max * 2, 40))
+        self.x = float(mLocation[0] * 128)
+        self.y = float(mLocation[1] * 128)   
+
+    def draw(self, screen, mHealth):
+        location = ()
+        if mHealth < 0:mpHealth = 0
+        yep = (mHealth, 20)
+        self.image.fill((255, 0, 0))
+        newImage = py.transform.scale(self.image, yep)
+        
+        up = self.y + 18
+        right = self.x +15
+        newRect = newImage.get_rect(topleft=(right,up))
+        screen.blit(newImage, newRect)
 
 
