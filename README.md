@@ -10,6 +10,7 @@ This is a fun rpg enemy wave game where you play as a man adventuring to destroy
 2. tutorial should pop up. the tutorial is separate to the game, nothing done there will effect the game
 3. orange circle is for moving
 4. red is attack
+5. To attack, click on the square that the enemy is on. you cannot hit more than one enemy.
 
 ## List of Key Features
 ***
