@@ -18,7 +18,13 @@ drawTiles = {
     8: "sprites//Tiles//other//bricks.png",
     9: "sprites//Tiles//dirt//grass.png",
     10: "sprites//Tiles//other//wotar.png",
-    11: "sprites//Tiles//dirt//jungle_grass.png"
+    11: "sprites//Tiles//dirt//jungle_grass.png",
+    12: "sprites\Tiles\Logs\CenterLog.png",
+    13: "sprites\Tiles\Logs\Left_log.png",
+    14: "sprites\Tiles\Logs\Right_log.png",
+    15: "sprites\Tiles\Liliy_Pad\LeftPad.png",
+    16: "sprites\Tiles\Liliy_Pad\Right Pad.png",
+    17: "sprites\Tiles\Logs\small_log.png"
 }
 
 wallTiles ={
@@ -33,7 +39,7 @@ for x in range(10):
     for y in range(10):
         tiles.append(ph.Tile((x, y), "sprites//Tiles//dirt//dirt_ground_1.png", False))
 
-max = 11
+max = 17
 
 scrollPause = False
 scrollDelay = 10
